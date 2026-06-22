@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Isha Foundation — 500K IE Scale-Up Dashboard</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -12,12 +11,10 @@
     --navy: #1F2937; --gold: #C9A24B; --teal: #2D6A68; --red: #B5524A;
     --green: #3A6B43; --bg: #f5f3ef; --card: #ffffff; --border: rgba(0,0,0,0.1);
     --text: #1a1a1a; --text2: #555; --text3: #888;
-    --ie: #2563eb; --hy: #16a34a; --free: #d97706; --none: #9ca3af;
-    --camp: #7c3aed;
+    --ie: #2563eb; --hy: #16a34a; --free: #d97706; --none: #9ca3af; --camp: #7c3aed;
   }
-  body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; }
+  body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; }
 
-  /* NAV */
   .nav { background: var(--navy); color: #fff; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; }
   .nav-brand { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; }
   .nav-brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
@@ -27,37 +24,51 @@
   .nav-tab.active { background: rgba(255,255,255,0.15); color: #fff; }
   .badge { background: var(--gold); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 4px; font-weight: 600; }
 
-  /* MAIN PANELS */
   .panel { display: none; padding: 1.5rem 2rem; max-width: 1400px; margin: 0 auto; }
   .panel.active { display: block; }
 
-  /* HERO */
-  .hero { background: linear-gradient(135deg, var(--navy) 0%, #374151 100%); color: #fff; padding: 2rem; border-radius: 12px; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
-  .hero h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-  .hero p { color: rgba(255,255,255,0.7); font-size: 13px; }
+  .hero { background: var(--navy); color: #fff; padding: 1.75rem 2rem; border-radius: 12px; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
+  .hero h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .hero p { color: rgba(255,255,255,0.6); font-size: 12.5px; }
   .hero-stats { display: flex; gap: 2rem; }
   .hero-stat { text-align: center; }
-  .hero-stat .n { font-size: 28px; font-weight: 700; color: var(--gold); }
-  .hero-stat .l { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+  .hero-stat .n { font-size: 26px; font-weight: 700; color: var(--gold); }
+  .hero-stat .l { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px; }
 
-  /* CARDS / GRID */
-  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.5rem; }
-  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 1.5rem; }
-  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 1.5rem; }
+  .live-band { background: #0f172a; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; border: 1px solid #1e293b; }
+  .live-band-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 8px; }
+  .live-pulse { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; display: inline-block; box-shadow: 0 0 6px #22c55e; }
+  .live-label { color: #94a3b8; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+  .live-stats { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; }
+  .live-stat { text-align: center; }
+  .live-stat .n { font-size: 24px; font-weight: 700; }
+  .live-stat .l { font-size: 11px; color: #64748b; margin-top: 3px; }
+  .live-stat .sub { font-size: 10px; color: #475569; margin-top: 2px; }
+  .funnel-section { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #1e293b; }
+  .funnel-label { font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .funnel-row { display: flex; align-items: center; gap: 10px; font-size: 11.5px; margin-bottom: 5px; }
+  .funnel-step { color: #94a3b8; min-width: 56px; }
+  .funnel-track { flex: 1; height: 7px; background: #1e293b; border-radius: 4px; overflow: hidden; }
+  .funnel-fill { height: 100%; border-radius: 4px; }
+  .funnel-count { color: #f1f5f9; min-width: 50px; text-align: right; font-weight: 600; }
+  .funnel-delta { min-width: 42px; font-size: 10.5px; }
+
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 1.25rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 1.25rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-bottom: 1.25rem; }
   .card { background: var(--card); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.25rem; }
-  .card-title { font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; font-weight: 600; }
+  .card-title { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; font-weight: 600; }
   .metric-n { font-size: 26px; font-weight: 700; color: var(--text); line-height: 1; }
   .metric-sub { font-size: 12px; color: var(--text3); margin-top: 4px; }
   .metric-delta { font-size: 11px; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 4px; }
   .delta-up { background: #dcfce7; color: #166534; }
   .delta-gap { background: #fee2e2; color: #991b1b; }
+  .delta-warn { background: #fef9c3; color: #854d0e; }
 
-  /* SECTION TITLES */
   .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1rem; }
-  .section-title { font-size: 16px; font-weight: 600; color: var(--text); }
+  .section-title { font-size: 15px; font-weight: 600; color: var(--text); }
   .section-sub { font-size: 12px; color: var(--text3); }
 
-  /* PROGRAM TABLE */
   .table-wrap { background: var(--card); border: 0.5px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; }
   .table-toolbar { padding: 12px 16px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .table-toolbar input, .table-toolbar select { padding: 6px 10px; border: 0.5px solid var(--border); border-radius: 6px; font-size: 13px; background: var(--bg); color: var(--text); min-width: 140px; }
@@ -75,7 +86,6 @@
   .tag-camp { background: #ede9fe; color: #5b21b6; }
   .tag-adv { background: #fce7f3; color: #9d174d; }
 
-  /* MAP GRID */
   .city-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; margin-bottom: 1.5rem; }
   .city-card { background: var(--card); border: 0.5px solid var(--border); border-radius: 8px; padding: 10px 12px; cursor: pointer; transition: all 0.15s; }
   .city-card:hover { border-color: var(--navy); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
@@ -90,7 +100,6 @@
   .city-count { font-size: 11px; color: var(--text3); margin-top: 4px; }
   .city-zero { opacity: 0.5; }
 
-  /* SIMULATOR */
   .sim-wrap { background: var(--card); border: 0.5px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; }
   .sim-header { background: var(--navy); color: #fff; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; }
   .sim-header h2 { font-size: 15px; font-weight: 600; }
@@ -110,7 +119,7 @@
   .slider-row span { min-width: 130px; }
   .slider-row input[type=range] { flex: 1; }
   .slider-val { min-width: 42px; text-align: right; font-weight: 500; color: var(--text); }
-  .sim-results { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.25rem; }
+  .sim-results { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 1.25rem; }
   .sim-result-card { border-radius: 8px; padding: 14px; text-align: center; }
   .sim-result-card .n { font-size: 22px; font-weight: 700; }
   .sim-result-card .l { font-size: 11px; margin-top: 2px; opacity: 0.8; }
@@ -125,47 +134,48 @@
   .ch-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
   .ch-bar-val { min-width: 70px; text-align: right; font-weight: 600; color: var(--text); }
 
-  /* INSIGHTS */
   .insight { background: var(--card); border-left: 3px solid var(--gold); padding: 12px 16px; border-radius: 0 8px 8px 0; margin-bottom: 10px; }
   .insight.gap { border-left-color: var(--red); }
   .insight.opp { border-left-color: var(--teal); }
+  .insight.data { border-left-color: #2563eb; }
   .insight-title { font-weight: 600; font-size: 13px; margin-bottom: 3px; }
   .insight-body { font-size: 12.5px; color: var(--text2); }
 
-  /* BUTTONS */
   .btn { padding: 7px 14px; border-radius: 6px; border: 0.5px solid var(--border); background: var(--card); color: var(--text); font-size: 12.5px; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
   .btn:hover { background: #f3f4f6; border-color: #9ca3af; }
   .btn-primary { background: var(--navy); color: #fff; border-color: var(--navy); }
-  .btn-primary:hover { background: #374151; }
   .btn-gold { background: var(--gold); color: #fff; border-color: var(--gold); }
-  .btn-gold:hover { background: #b8922f; }
-
-  /* MISC */
   .divider { border: none; border-top: 0.5px solid var(--border); margin: 1.5rem 0; }
   .page-count { font-size: 12px; color: var(--text3); }
-  #map-tooltip { position: fixed; background: rgba(0,0,0,0.85); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 12px; pointer-events: none; display: none; z-index: 999; }
 
-  @media (max-width: 900px) {
-    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  /* IEO leaderboard table */
+  .lb-bar { height: 6px; border-radius: 3px; display: inline-block; vertical-align: middle; transition: width 0.3s; }
+  .pct-good { color: #16a34a; font-weight: 600; }
+  .pct-warn { color: #d97706; font-weight: 600; }
+  .pct-bad  { color: #dc2626; font-weight: 600; }
+
+  .modal-trigger { position:fixed;bottom:1.25rem;right:1.25rem;background:var(--navy);color:#fff;border:none;border-radius:50px;padding:8px 16px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(0,0,0,0.2);z-index:90;transition:all 0.15s; }
+  .modal-trigger:hover { background:#374151; }
+
+  @media (max-width:900px) {
+    .grid-4 { grid-template-columns: repeat(2,1fr); }
     .channels-grid { grid-template-columns: 1fr; }
-    .sim-results { grid-template-columns: repeat(2, 1fr); }
+    .sim-results { grid-template-columns: repeat(2,1fr); }
     .panel { padding: 1rem; }
     .hero { flex-direction: column; gap: 1rem; }
-    .hero-stats { gap: 1rem; }
+    .live-stats { grid-template-columns: repeat(3,1fr); }
   }
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <div class="nav-brand">
-    <div class="dot"></div>
-    Isha Foundation — IE 500K Dashboard
-  </div>
+  <div class="nav-brand"><div class="dot"></div>Isha North America — IE 500K Dashboard</div>
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="showPanel('overview')"><i class="ti ti-dashboard"></i> Overview</button>
+    <button class="nav-tab" onclick="showPanel('ieo')"><i class="ti ti-chart-line"></i> IEO Live Data</button>
     <button class="nav-tab" onclick="showPanel('programs')"><i class="ti ti-list"></i> Programs <span class="badge" id="prog-badge">—</span></button>
-    <button class="nav-tab" onclick="showPanel('cities')"><i class="ti ti-map-pin"></i> Cities</button>
+    <button class="nav-tab" onclick="showPanel('cities')"><i class="ti ti-map-pin"></i> Cities In-Person</button>
     <button class="nav-tab" onclick="showPanel('simulator')"><i class="ti ti-adjustments"></i> Simulator</button>
     <button class="nav-tab" onclick="showPanel('insights')"><i class="ti ti-bulb"></i> Insights</button>
   </div>
@@ -173,21 +183,40 @@
 
 <div id="map-tooltip"></div>
 
-<!-- ═══════════════════════════════════════════════════ -->
-<!-- PANEL 1: OVERVIEW                                  -->
-<!-- ═══════════════════════════════════════════════════ -->
+<!-- ═══ PANEL: OVERVIEW ═══ -->
 <div class="panel active" id="panel-overview">
-
   <div class="hero">
     <div>
       <h1>North America IE Scale-Up Command Center</h1>
-      <p>Live program data — June 22, 2026 · 60 cities tracked · 500K IE target</p>
+      <p>In-person program data · June 22, 2026 &nbsp;|&nbsp; IEO online tracker · Apr 20, 2026 &nbsp;|&nbsp; 60 cities tracked &nbsp;|&nbsp; 500K IE annual target</p>
     </div>
     <div class="hero-stats">
-      <div class="hero-stat"><div class="n" id="h-total-programs">—</div><div class="l">Programs scheduled</div></div>
+      <div class="hero-stat"><div class="n" id="h-total-programs">—</div><div class="l">In-person programs scheduled</div></div>
       <div class="hero-stat"><div class="n" id="h-active-cities">—</div><div class="l">Active cities</div></div>
-      <div class="hero-stat"><div class="n" id="h-dormant">—</div><div class="l">Dormant cities</div></div>
+      <div class="hero-stat"><div class="n">33,286</div><div class="l">IEO completions (online)</div></div>
       <div class="hero-stat"><div class="n">500K</div><div class="l">Annual IE target</div></div>
+    </div>
+  </div>
+
+  <!-- IEO LIVE BAND -->
+  <div class="live-band">
+    <div class="live-band-header">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="live-pulse"></span>
+        <span class="live-label">IEO Online Tracker — snapshot Apr 20, 2026 &nbsp;·&nbsp; Source: ieo-leaderboard.vercel.app</span>
+      </div>
+      <a href="https://ieo-leaderboard.vercel.app/ieo-progress?group=all" target="_blank" style="color:#C9A24B;font-size:11px;text-decoration:none;display:flex;align-items:center;gap:4px;"><i class="ti ti-external-link" style="font-size:12px;"></i> View live tracker</a>
+    </div>
+    <div class="live-stats">
+      <div class="live-stat"><div class="n" style="color:#f1f5f9;">54,360</div><div class="l">Total enrolled (IEO)</div></div>
+      <div class="live-stat"><div class="n" style="color:#22c55e;">33,286</div><div class="l">Completed Step 7</div></div>
+      <div class="live-stat" style="border-left:1px solid #1e293b;border-right:1px solid #1e293b;">
+        <div class="n" style="color:#f59e0b;">61.2%</div>
+        <div class="l">Real completion rate</div>
+        <div class="sub" style="color:#f87171;">↓ 8.8 pts below 70% assumption</div>
+      </div>
+      <div class="live-stat"><div class="n" style="color:#f87171;">13,994</div><div class="l">Expired — never finished</div><div class="sub">25.7% of all enrolled</div></div>
+      <div class="live-stat"><div class="n" style="color:#a78bfa;">55</div><div class="l">Cities with IEO data</div><div class="sub">All have active online students</div></div>
     </div>
   </div>
 
@@ -218,32 +247,25 @@
 
   <div class="grid-2">
     <div class="card">
-      <div class="section-header">
-        <div class="section-title">Programs by type</div>
-      </div>
-      <div style="position:relative;height:200px;"><canvas id="chart-type" role="img" aria-label="Programs by type breakdown">IE In-Person, Hatha Yoga, Free Events breakdown.</canvas></div>
+      <div class="section-header"><div class="section-title">Programs by type</div></div>
+      <div style="position:relative;height:190px;"><canvas id="chart-type" role="img" aria-label="Programs by type">IE In-Person, Hatha Yoga, Free Events breakdown.</canvas></div>
       <div id="chart-type-legend" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;font-size:12px;color:var(--text2);"></div>
     </div>
     <div class="card">
-      <div class="section-header">
-        <div class="section-title">Programs by city (top 12)</div>
-      </div>
-      <div style="position:relative;height:200px;"><canvas id="chart-city" role="img" aria-label="Top cities by program count">Top cities by number of scheduled programs.</canvas></div>
+      <div class="section-header"><div class="section-title">In-person programs by city (top 12)</div></div>
+      <div style="position:relative;height:190px;"><canvas id="chart-city" role="img" aria-label="Top cities by program count">Top cities by number of scheduled in-person programs.</canvas></div>
     </div>
   </div>
 
-  <div class="card" style="margin-bottom:1.5rem;">
-    <div class="section-header">
-      <div class="section-title">Monthly distribution of programs</div>
-      <div class="section-sub">All cities · 2026</div>
-    </div>
-    <div style="position:relative;height:180px;"><canvas id="chart-monthly" role="img" aria-label="Programs by month">Programs scheduled per month in 2026.</canvas></div>
+  <div class="card" style="margin-bottom:1.25rem;">
+    <div class="section-header"><div class="section-title">Monthly distribution of programs</div><div class="section-sub">All cities · 2026</div></div>
+    <div style="position:relative;height:170px;"><canvas id="chart-monthly" role="img" aria-label="Programs by month">Programs scheduled per month in 2026.</canvas></div>
   </div>
 
   <div class="grid-2" style="margin-bottom:0">
     <div class="card">
       <div class="section-title" style="margin-bottom:12px">Country breakdown</div>
-      <div style="position:relative;height:160px;"><canvas id="chart-country" role="img" aria-label="USA vs Canada programs">Programs split between USA and Canada.</canvas></div>
+      <div style="position:relative;height:150px;"><canvas id="chart-country" role="img" aria-label="USA vs Canada programs">Programs split between USA and Canada.</canvas></div>
     </div>
     <div class="card">
       <div class="section-title" style="margin-bottom:12px">City activation rate</div>
@@ -255,24 +277,131 @@
         <div class="progress-label"><span>Cities with IE scheduled</span><span id="ie-pct">—</span></div>
         <div class="progress-bar"><div class="progress-fill" id="ie-bar" style="background:#16a34a;width:0%"></div></div>
       </div>
-      <div>
+      <div style="margin-bottom:12px;">
         <div class="progress-label"><span>Cities with Hatha Yoga</span><span id="hy-pct">—</span></div>
         <div class="progress-bar"><div class="progress-fill" id="hy-bar" style="background:#d97706;width:0%"></div></div>
       </div>
-      <div style="margin-top:12px;font-size:12px;color:var(--text2);">
-        <i class="ti ti-info-circle" style="font-size:13px;vertical-align:-2px;margin-right:4px;"></i>
-        Activating all 60 cities is the single biggest lever toward 500K
+      <div style="font-size:12px;color:var(--text2);"><i class="ti ti-info-circle" style="font-size:13px;vertical-align:-2px;margin-right:4px;"></i>Note: All 55 cities have online IEO enrollment — the gaps above reflect only in-person scheduling.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PANEL: IEO LIVE DATA ═══ -->
+<div class="panel" id="panel-ieo">
+  <div class="section-header">
+    <div class="section-title">IEO online tracker — city leaderboard &amp; regional breakdown</div>
+    <div class="section-sub">Source: ieo-leaderboard.vercel.app · Snapshot: Apr 20, 2026</div>
+  </div>
+
+  <!-- Regional summary -->
+  <div class="grid-4" style="margin-bottom:1.25rem;">
+    <div class="card">
+      <div class="card-title">East region</div>
+      <div class="metric-n">19,608</div>
+      <div class="metric-sub">enrolled · 11,904 completed</div>
+      <span class="metric-delta delta-up">60.7% completion</span>
+    </div>
+    <div class="card">
+      <div class="card-title">West region</div>
+      <div class="metric-n">21,508</div>
+      <div class="metric-sub">enrolled · 12,893 completed</div>
+      <span class="metric-delta delta-warn">59.9% completion</span>
+    </div>
+    <div class="card">
+      <div class="card-title">Midwest region</div>
+      <div class="metric-n">8,506</div>
+      <div class="metric-sub">enrolled · 5,144 completed</div>
+      <span class="metric-delta delta-warn">60.5% completion</span>
+    </div>
+    <div class="card">
+      <div class="card-title">Expired — re-engagement opp</div>
+      <div class="metric-n" style="color:#dc2626;">13,994</div>
+      <div class="metric-sub">paid &amp; enrolled but never finished</div>
+      <span class="metric-delta delta-gap">25.7% of total cohort</span>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:1.25rem;">
+    <div class="card">
+      <div class="section-header"><div class="section-title">Completion rate by city</div><div class="section-sub">Ranked by cohort size</div></div>
+      <div style="position:relative;height:340px;"><canvas id="chart-ieo-pct" role="img" aria-label="IE completion rate by city">Completion percentage per city.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="section-header"><div class="section-title">Cohort vs completed by city (top 20)</div></div>
+      <div style="position:relative;height:340px;"><canvas id="chart-ieo-cohort" role="img" aria-label="Cohort size vs completions by city">Enrolled vs completed per city.</canvas></div>
+    </div>
+  </div>
+
+  <!-- Full city leaderboard table -->
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="text" id="ieo-search" placeholder="Search city…" oninput="renderIEOTable()">
+      <select id="ieo-region" onchange="renderIEOTable()">
+        <option value="">All regions</option>
+        <option value="East">East</option>
+        <option value="West">West</option>
+        <option value="Midwest">Midwest</option>
+      </select>
+      <select id="ieo-sort" onchange="renderIEOTable()">
+        <option value="cohort">Sort: largest cohort</option>
+        <option value="completed">Sort: most completed</option>
+        <option value="pct">Sort: highest completion %</option>
+        <option value="pct_asc">Sort: lowest completion % (needs help)</option>
+      </select>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead><tr>
+          <th>#</th><th>City</th><th>Region</th><th>Enrolled</th><th>Completed</th><th>Completion %</th><th>Completion bar</th><th>Gap to 500K city quota</th>
+        </tr></thead>
+        <tbody id="ieo-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Key IEO insights -->
+  <div class="grid-2">
+    <div>
+      <div style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">What the data reveals</div>
+      <div class="insight data">
+        <div class="insight-title">Real completion rate is 61.2% — not 70%</div>
+        <div class="insight-body">Our simulator was calibrated to 70% based on general wellness program benchmarks. The actual IEO rate is 61.2% — all simulator defaults have been updated to reflect this. This means the 500K target requires either more enrollments, or meaningfully improving completion rates.</div>
+      </div>
+      <div class="insight gap">
+        <div class="insight-title">25.7% of enrolled never completed a step</div>
+        <div class="insight-body">13,994 paid and enrolled students let their access expire without completing anything. This is the single most recoverable pool of participants — a targeted re-engagement campaign could potentially unlock 5,000–8,000 additional completions from people already in the system.</div>
+      </div>
+      <div class="insight gap">
+        <div class="insight-title">Steps 4 and 6 are the critical drop-off points</div>
+        <div class="insight-body">The funnel loses 40% between Steps 3 and 4, and 58% between Steps 5 and 6. These two transitions need dedicated nudge campaigns — automated emails, community check-ins, or live support sessions — to materially improve the 61.2% completion rate.</div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">City-level findings</div>
+      <div class="insight opp">
+        <div class="insight-title">Toronto leads NA with 4,619 enrolled and 65% completion</div>
+        <div class="insight-body">Toronto is the #1 city center by both volume and completion quality. Its combination of active in-person Hatha Yoga calendar and strong online IE pipeline is the model for every other city to replicate.</div>
+      </div>
+      <div class="insight opp">
+        <div class="insight-title">Chicago has 1,429 online students — but zero in-person programs</div>
+        <div class="insight-body">Chicago is a top-10 IEO city with nearly 1,500 enrolled students and 58% completion. Yet the in-person calendar is completely empty. Adding even 2 IE cohorts per month in Chicago would serve an existing, proven audience.</div>
+      </div>
+      <div class="insight gap">
+        <div class="insight-title">LA has the worst completion rate among major cities: 50.1%</div>
+        <div class="insight-body">With 1,257 enrolled, Los Angeles is underperforming every other major city on completion. The Isha Yoga Center LA provides the physical infrastructure — the gap suggests a support and community engagement problem, not a reach problem.</div>
+      </div>
+      <div class="insight gap">
+        <div class="insight-title">West Palm Beach: 46.8% — lowest in the entire leaderboard</div>
+        <div class="insight-body">848 enrolled, only 397 completed. This needs direct investigation — either the audience quality differs, or Step 7 scheduling in this region is a barrier.</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════ -->
-<!-- PANEL 2: PROGRAMS TABLE                            -->
-<!-- ═══════════════════════════════════════════════════ -->
+<!-- ═══ PANEL: PROGRAMS ═══ -->
 <div class="panel" id="panel-programs">
   <div class="section-header">
-    <div class="section-title">All program listings</div>
+    <div class="section-title">All in-person program listings</div>
     <span class="page-count" id="prog-count">Loading…</span>
   </div>
   <div class="table-wrap">
@@ -299,199 +428,211 @@
     </div>
     <div style="overflow-x:auto;">
       <table>
-        <thead>
-          <tr>
-            <th onclick="sortTable('city')">City <i class="ti ti-arrows-sort" style="font-size:10px;"></i></th>
-            <th onclick="sortTable('state')">State</th>
-            <th onclick="sortTable('country')">Country</th>
-            <th onclick="sortTable('centerType')">Type</th>
-            <th onclick="sortTable('programName')">Program</th>
-            <th onclick="sortTable('programType')">Category</th>
-            <th onclick="sortTable('startDate')">Start</th>
-            <th onclick="sortTable('endDate')">End</th>
-            <th onclick="sortTable('venueName')">Venue</th>
-            <th>Address</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th onclick="sortTable('city')">City <i class="ti ti-arrows-sort" style="font-size:10px;"></i></th>
+          <th onclick="sortTable('state')">State</th>
+          <th onclick="sortTable('country')">Country</th>
+          <th onclick="sortTable('centerType')">Type</th>
+          <th onclick="sortTable('programName')">Program</th>
+          <th onclick="sortTable('programType')">Category</th>
+          <th onclick="sortTable('startDate')">Start</th>
+          <th onclick="sortTable('endDate')">End</th>
+          <th onclick="sortTable('venueName')">Venue</th>
+          <th>Address</th>
+        </tr></thead>
         <tbody id="program-tbody"></tbody>
       </table>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════ -->
-<!-- PANEL 3: CITIES                                    -->
-<!-- ═══════════════════════════════════════════════════ -->
+<!-- ═══ PANEL: CITIES IN-PERSON ═══ -->
 <div class="panel" id="panel-cities">
-  <div class="section-header">
-    <div class="section-title">All 60 North America cities</div>
-    <div style="display:flex;gap:8px;">
-      <button class="btn" onclick="filterCities('all')">All</button>
-      <button class="btn" onclick="filterCities('active')"><span class="city-dot dot-ie" style="display:inline-block;margin-right:4px;"></span>Active</button>
-      <button class="btn" onclick="filterCities('zero')"><span class="city-dot" style="display:inline-block;margin-right:4px;background:#9ca3af;"></span>No programs</button>
-      <button class="btn" onclick="filterCities('canada')">Canada</button>
+  <div class="section-header" style="margin-bottom:0.75rem;">
+    <div class="section-title">Cities In-Person — program activity across North America</div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <!-- Filter buttons -->
+      <div style="display:flex;gap:4px;">
+        <button class="btn" id="cf-all"   onclick="setCityFilter('all')"    style="font-size:11.5px;padding:5px 10px;">All</button>
+        <button class="btn" id="cf-act"   onclick="setCityFilter('active')" style="font-size:11.5px;padding:5px 10px;">Active</button>
+        <button class="btn" id="cf-zero"  onclick="setCityFilter('zero')"   style="font-size:11.5px;padding:5px 10px;">No programs</button>
+        <button class="btn" id="cf-can"   onclick="setCityFilter('canada')" style="font-size:11.5px;padding:5px 10px;">Canada</button>
+      </div>
+      <!-- View toggle -->
+      <div style="display:flex;gap:0;border:0.5px solid var(--border);border-radius:7px;overflow:hidden;">
+        <button id="view-bubble" onclick="setCityView('bubble')"
+          style="padding:5px 12px;font-size:12px;border:none;cursor:pointer;display:flex;align-items:center;gap:5px;background:#1F2937;color:#fff;transition:all 0.15s;">
+          <i class="ti ti-circles-relation" style="font-size:14px;"></i> Bubble
+        </button>
+        <button id="view-grid" onclick="setCityView('grid')"
+          style="padding:5px 12px;font-size:12px;border:none;cursor:pointer;display:flex;align-items:center;gap:5px;background:#fff;color:#555;border-left:0.5px solid var(--border);transition:all 0.15s;">
+          <i class="ti ti-layout-grid" style="font-size:14px;"></i> Cards
+        </button>
+      </div>
     </div>
   </div>
-  <div class="city-grid" id="city-grid"></div>
-  <div class="card" id="city-detail" style="display:none;">
-    <div class="section-title" id="cd-title" style="margin-bottom:12px;"></div>
-    <table style="width:100%;font-size:12.5px;">
-      <thead><tr>
-        <th style="background:#f9f8f6;padding:6px 10px;text-align:left;font-size:11px;color:var(--text3);font-weight:600;">Program</th>
-        <th style="background:#f9f8f6;padding:6px 10px;text-align:left;font-size:11px;color:var(--text3);font-weight:600;">Dates</th>
-        <th style="background:#f9f8f6;padding:6px 10px;text-align:left;font-size:11px;color:var(--text3);font-weight:600;">Venue</th>
-        <th style="background:#f9f8f6;padding:6px 10px;text-align:left;font-size:11px;color:var(--text3);font-weight:600;">Type</th>
-      </tr></thead>
-      <tbody id="cd-body"></tbody>
-    </table>
+
+  <!-- Legend row -->
+  <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--text2);margin-bottom:1rem;padding:8px 12px;background:var(--card);border:0.5px solid var(--border);border-radius:8px;align-items:center;">
+    <span style="font-weight:600;color:var(--text3);">Bubble size = total in-person programs &nbsp;·&nbsp; Color = city type</span>
+    <span style="display:flex;align-items:center;gap:5px;"><span style="width:12px;height:12px;border-radius:50%;background:#2563eb;display:inline-block;opacity:0.85;"></span>Has IE in-person</span>
+    <span style="display:flex;align-items:center;gap:5px;"><span style="width:12px;height:12px;border-radius:50%;background:#16a34a;display:inline-block;opacity:0.85;"></span>Hatha Yoga only</span>
+    <span style="display:flex;align-items:center;gap:5px;"><span style="width:12px;height:12px;border-radius:50%;background:#d97706;display:inline-block;opacity:0.85;"></span>Free events only</span>
+    <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:50%;background:#9ca3af;display:inline-block;border:1.5px dashed #6b7280;"></span>No programs yet</span>
+    <span style="display:flex;align-items:center;gap:5px;"><span style="width:12px;height:12px;border-radius:50%;background:#7c3aed;display:inline-block;opacity:0.85;"></span>Flagship campus</span>
+  </div>
+
+  <!-- BUBBLE VIEW (default) -->
+  <div id="cities-bubble-view">
+    <div class="card" style="padding:1rem;margin-bottom:1rem;">
+      <div id="bubble-container" style="position:relative;width:100%;height:560px;overflow:hidden;background:#fafaf8;border-radius:8px;cursor:default;">
+        <canvas id="bubble-chart" role="img" aria-label="Bubble chart of Isha NA city program activity">City bubble chart showing program count and type per city.</canvas>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-top:8px;text-align:center;">
+        <i class="ti ti-hand-click" style="font-size:12px;vertical-align:-1px;margin-right:3px;"></i>
+        Click any bubble to see that city's program detail below
+      </div>
+    </div>
+
+    <!-- City detail panel (shared with grid view) -->
+    <div class="card" id="city-detail" style="display:none;">
+      <div class="section-title" id="cd-title" style="margin-bottom:12px;"></div>
+      <table style="width:100%;font-size:12.5px;">
+        <thead><tr>
+          <th style="background:#f9f8f6;padding:6px 10px;text-align:left;font-size:11px;color:var(--text3);font-weight:600;">Program</th>
+          <th style="background:#f9f8f6;padding:6px 10px;text-align:left;font-size:11px;color:var(--text3);font-weight:600;">Dates</th>
+          <th style="background:#f9f8f6;padding:6px 10px;text-align:left;font-size:11px;color:var(--text3);font-weight:600;">Venue</th>
+          <th style="background:#f9f8f6;padding:6px 10px;text-align:left;font-size:11px;color:var(--text3);font-weight:600;">Type</th>
+        </tr></thead>
+        <tbody id="cd-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- GRID / CARD VIEW -->
+  <div id="cities-grid-view" style="display:none;">
+    <div class="city-grid" id="city-grid"></div>
+    <div class="card" id="city-detail-grid" style="display:none;">
+      <div class="section-title" id="cd-title-grid" style="margin-bottom:12px;"></div>
+      <table style="width:100%;font-size:12.5px;">
+        <thead><tr>
+          <th style="background:#f9f8f6;padding:6px 10px;text-align:left;font-size:11px;color:var(--text3);font-weight:600;">Program</th>
+          <th style="background:#f9f8f6;padding:6px 10px;text-align:left;font-size:11px;color:var(--text3);font-weight:600;">Dates</th>
+          <th style="background:#f9f8f6;padding:6px 10px;text-align:left;font-size:11px;color:var(--text3);font-weight:600;">Venue</th>
+          <th style="background:#f9f8f6;padding:6px 10px;text-align:left;font-size:11px;color:var(--text3);font-weight:600;">Type</th>
+        </tr></thead>
+        <tbody id="cd-body-grid"></tbody>
+      </table>
+    </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════ -->
-<!-- PANEL 4: SIMULATOR                                 -->
-<!-- ═══════════════════════════════════════════════════ -->
+<!-- ═══ PANEL: SIMULATOR ═══ -->
 <div class="panel" id="panel-simulator">
   <div class="sim-wrap">
     <div class="sim-header">
-      <h2><i class="ti ti-adjustments" style="font-size:16px;margin-right:8px;"></i>IE 500K Scale-Up Simulator</h2>
+      <h2><i class="ti ti-adjustments" style="font-size:16px;margin-right:8px;"></i>IE 500K Scale-Up Simulator <span style="font-size:11px;font-weight:400;opacity:0.7;margin-left:8px;">Completion rate defaults recalibrated to real 61.2% from IEO tracker</span></h2>
       <button class="btn" style="background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.3);" onclick="resetSim()"><i class="ti ti-refresh"></i> Reset</button>
     </div>
     <div class="sim-body">
-
       <div class="sim-target">
         <label><i class="ti ti-target" style="margin-right:6px;"></i>Annual IE target</label>
         <input type="range" min="100000" max="1000000" step="50000" value="500000" id="target-slider" oninput="updateSim()">
         <div class="val" id="target-val">500,000</div>
       </div>
-
       <div class="sim-results" id="sim-results">
-        <div class="sim-result-card" style="background:#dbeafe;color:#1e40af;">
-          <div class="n" id="sr-total">0</div><div class="l">Total projected</div>
-        </div>
-        <div class="sim-result-card" style="background:#dcfce7;color:#166534;">
-          <div class="n" id="sr-pct">0%</div><div class="l">% of target reached</div>
-        </div>
-        <div class="sim-result-card" style="background:#fef9c3;color:#854d0e;">
-          <div class="n" id="sr-gap">500K</div><div class="l">Remaining gap</div>
-        </div>
-        <div class="sim-result-card" style="background:#ede9fe;color:#5b21b6;">
-          <div class="n" id="sr-channels">0</div><div class="l">Active channels</div>
-        </div>
+        <div class="sim-result-card" style="background:#dbeafe;color:#1e40af;"><div class="n" id="sr-total">0</div><div class="l">Total projected</div></div>
+        <div class="sim-result-card" style="background:#dcfce7;color:#166534;"><div class="n" id="sr-pct">0%</div><div class="l">% of target reached</div></div>
+        <div class="sim-result-card" style="background:#fef9c3;color:#854d0e;"><div class="n" id="sr-gap">500K</div><div class="l">Remaining gap</div></div>
+        <div class="sim-result-card" style="background:#ede9fe;color:#5b21b6;"><div class="n" id="sr-channels">0</div><div class="l">Active channels</div></div>
       </div>
-
       <div class="progress-bar-wrap">
-        <div class="progress-label">
-          <span style="font-weight:600;">Progress to target</span>
-          <span id="prog-to-target">0 / 500,000</span>
-        </div>
-        <div class="progress-bar" style="height:18px;">
-          <div class="progress-fill" id="main-progress" style="background:linear-gradient(90deg,#2563eb,#1d4ed8);width:0%;"></div>
-        </div>
+        <div class="progress-label"><span style="font-weight:600;">Progress to target</span><span id="prog-to-target">0 / 500,000</span></div>
+        <div class="progress-bar" style="height:18px;"><div class="progress-fill" id="main-progress" style="background:#2563eb;width:0%;"></div></div>
       </div>
-
-      <div class="section-header" style="margin-bottom:10px;">
-        <div class="section-title">Adjust each channel</div>
-        <div class="section-sub">Tune reach and conversion to model different scenarios</div>
-      </div>
-
+      <div class="section-header" style="margin-bottom:10px;"><div class="section-title">Adjust each channel</div><div class="section-sub">Completion rate defaults set to real 61.2% from IEO tracker data</div></div>
       <div class="channels-grid" id="channels-grid"></div>
-
-      <div class="section-header" style="margin-top:0.5rem;margin-bottom:10px;">
-        <div class="section-title">Channel contribution breakdown</div>
-      </div>
+      <div class="section-header" style="margin-top:0.5rem;margin-bottom:10px;"><div class="section-title">Channel contribution breakdown</div></div>
       <div class="channel-bars" id="channel-bars"></div>
-
-      <div style="position:relative;height:280px;margin-top:1rem;">
-        <canvas id="sim-chart" role="img" aria-label="Simulator bar chart showing contribution per channel">Contributions by channel from the simulator settings.</canvas>
-      </div>
-
+      <div style="position:relative;height:280px;margin-top:1rem;"><canvas id="sim-chart" role="img" aria-label="Simulator bar chart">Contributions by channel.</canvas></div>
       <hr class="divider">
       <div class="section-title" style="margin-bottom:10px;">Quick scenario presets</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="btn" onclick="loadScenario('conservative')"><i class="ti ti-chart-line"></i> Conservative (digital-heavy)</button>
-        <button class="btn" onclick="loadScenario('balanced')"><i class="ti ti-adjustments"></i> Balanced (all channels)</button>
-        <button class="btn btn-gold" onclick="loadScenario('aggressive')"><i class="ti ti-rocket"></i> Aggressive (full activation)</button>
+        <button class="btn" onclick="loadScenario('conservative')"><i class="ti ti-chart-line"></i> Conservative</button>
+        <button class="btn" onclick="loadScenario('balanced')"><i class="ti ti-adjustments"></i> Balanced</button>
+        <button class="btn btn-gold" onclick="loadScenario('aggressive')"><i class="ti ti-rocket"></i> Aggressive</button>
         <button class="btn" onclick="loadScenario('cities')"><i class="ti ti-map-pin"></i> City center focus</button>
         <button class="btn" onclick="loadScenario('corporate')"><i class="ti ti-building"></i> Corporate-led</button>
+        <button class="btn" onclick="loadScenario('reengagement')"><i class="ti ti-refresh-alert"></i> Re-engage expired 25%</button>
       </div>
-
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════ -->
-<!-- PANEL 5: INSIGHTS                                  -->
-<!-- ═══════════════════════════════════════════════════ -->
+<!-- ═══ PANEL: INSIGHTS ═══ -->
 <div class="panel" id="panel-insights">
-  <div class="section-title" style="margin-bottom:1rem;">Strategic insights & gap analysis</div>
-
+  <div class="section-title" style="margin-bottom:1rem;">Strategic insights, gap analysis &amp; IEO data findings</div>
   <div class="grid-2" style="margin-bottom:1rem;">
     <div>
-      <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Critical gaps</div>
-      <div class="insight gap">
-        <div class="insight-title">47 of 60 cities have zero programs scheduled</div>
-        <div class="insight-body">Only 13 cities are currently active. Activating the dormant 47 with even 1 IE cohort/month each would add tens of thousands of completions annually.</div>
+      <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">From the IEO live tracker</div>
+      <div class="insight data">
+        <div class="insight-title">Real completion rate: 61.2% — recalibrates the entire model</div>
+        <div class="insight-body">At 61.2%, reaching 500K completions requires ~817K total enrollments (not the ~714K assumed at 70%). This is a meaningful difference — roughly 103,000 additional enrollments needed to hit the same 500K completion target.</div>
       </div>
       <div class="insight gap">
-        <div class="insight-title">Entire US West Coast is dark</div>
-        <div class="insight-body">San Francisco, San Diego, Portland, Sacramento, Orange County — all have zero programs. Combined metro population: ~20M. Largest unserved market in NA.</div>
+        <div class="insight-title">13,994 expired students = the fastest re-engagement opportunity</div>
+        <div class="insight-body">25.7% of all enrolled never completed any steps. A targeted re-engagement campaign for this group — already inside the system, already paid — could realistically convert 30–50% of them, adding 4,000–7,000 completions at near-zero acquisition cost.</div>
       </div>
       <div class="insight gap">
-        <div class="insight-title">11 Midwest cities with zero IE or Hatha Yoga</div>
-        <div class="insight-body">Chicago, Columbus, Indianapolis, Milwaukee, Detroit, Cleveland, Dayton, Cincinnati, St. Louis, Kansas City, Minneapolis — all dormant despite active city centers.</div>
+        <div class="insight-title">Step 4 is where 40% of active students drop off</div>
+        <div class="insight-body">The steepest single-step drop in the funnel is Step 3 → Step 4. A dedicated nudge system (automated emails, WhatsApp reminders, satsang invitations) at Step 3 completion could meaningfully close this gap and lift the overall 61.2% rate.</div>
       </div>
       <div class="insight gap">
-        <div class="insight-title">Nashville: 45 min from Isha Institute TN — zero programs</div>
-        <div class="insight-body">The city closest to Isha's flagship US campus has no scheduled programs. Extraordinary gap given proximity to teachers, materials, and support infrastructure.</div>
+        <div class="insight-title">LA: 1,257 enrolled, only 50.1% completion</div>
+        <div class="insight-body">The worst completion rate among major cities. With the Isha Yoga Center LA as a physical anchor, the reach isn't the problem — completion support and community is. Local in-person Step 7 sessions and satsangs could directly fix this.</div>
       </div>
     </div>
     <div>
-      <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Opportunities</div>
-      <div class="insight opp">
-        <div class="insight-title">Toronto model: replicate in 10 major metros</div>
-        <div class="insight-body">Toronto runs 3 IE programs + 12 Hatha Yoga across 6 sub-cities with a single coordination hub. This model applied to Chicago, SF, Houston, DC, and LA could add 50K+ annually.</div>
+      <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Critical gaps — in-person programs</div>
+      <div class="insight gap">
+        <div class="insight-title">47 of 60 cities have zero in-person programs scheduled</div>
+        <div class="insight-body">Only 13 cities are active for in-person programming. Yet all 55 cities on the IEO tracker have online students enrolled — meaning in-person activation would directly serve an existing, paying community in every dormant city.</div>
+      </div>
+      <div class="insight gap">
+        <div class="insight-title">Chicago: 1,429 IEO students, zero in-person programs</div>
+        <div class="insight-body">Chicago is a top-10 IEO city with a 58% completion rate. Adding in-person IE and Hatha Yoga programs here directly serves an existing community and would likely boost Chicago's online completion rate too.</div>
       </div>
       <div class="insight opp">
-        <div class="insight-title">Philadelphia is the most programmatically rich US city</div>
-        <div class="insight-body">9 scheduled programs at a single recurring venue (Exton Hotel). This proves sustained multi-format city programming is operationally achievable in the US.</div>
+        <div class="insight-title">Toronto + Philadelphia = the replication model</div>
+        <div class="insight-body">Toronto leads the IEO leaderboard (4,619 enrolled, 65% completion) and runs 18+ in-person programs. Philadelphia runs 9 in-person programs at a consistent venue. These two cities prove the flywheel: in-person activity drives online completion rates up.</div>
       </div>
       <div class="insight opp">
-        <div class="insight-title">Corporate B2B: largest untapped multiplier</div>
-        <div class="insight-body">Chicago, NYC, SF, Houston, Dallas, DC — massive corporate markets with zero active programs. One Work Beyond Stress contract with a Fortune 500 = hundreds of IE participants, employer-subsidized.</div>
-      </div>
-      <div class="insight opp">
-        <div class="insight-title">Canada: Toronto + Vancouver prove the model works</div>
-        <div class="insight-body">Both are highly active with multi-format calendars. Calgary, Montreal, Edmonton, Ottawa, and Regina have zero programs — ready for the same playbook.</div>
+        <div class="insight-title">Every dormant city already has IEO students to serve</div>
+        <div class="insight-body">Nashville has 716 enrolled online. Denver has 605. Sacramento 449. These aren't cold markets — they have active communities waiting for in-person programming. The case for activating each dormant city is stronger than ever.</div>
       </div>
     </div>
   </div>
 
   <div class="card">
-    <div class="section-title" style="margin-bottom:12px;">Channel-by-channel path to 500K</div>
+    <div class="section-title" style="margin-bottom:12px;">Channel-by-channel path to 500K — updated with real IEO data</div>
     <div style="overflow-x:auto;">
       <table>
-        <thead>
-          <tr>
-            <th>Channel</th>
-            <th>Current state</th>
-            <th>Realistic annual volume</th>
-            <th>Key activation lever</th>
-            <th>Priority</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th>Channel</th><th>Current state</th><th>Realistic annual volume</th><th>Key lever</th><th>Completion rate basis</th><th>Priority</th>
+        </tr></thead>
         <tbody>
-          <tr><td><b>Digital / App-Led Online IE</b></td><td>Running — not at scale</td><td>150,000–200,000</td><td>Paid digital campaigns; scale Miracle of Mind app downloads</td><td><span class="tag tag-ie">Highest</span></td></tr>
-          <tr><td><b>Local City Center Network</b></td><td>13 of 60 active</td><td>50,000–100,000</td><td>Activate all 47 dormant cities with monthly IE cohorts</td><td><span class="tag tag-ie">High</span></td></tr>
-          <tr><td><b>Paid Digital / Media</b></td><td>Exists — not maximized</td><td>50,000–100,000</td><td>YouTube, Meta, Google Ads; content campaigns</td><td><span class="tag tag-ie">High</span></td></tr>
-          <tr><td><b>Ambassadors & Ecosystem Referrals</b></td><td>Informal only</td><td>30,000–60,000</td><td>Formal ambassador program for IE graduates</td><td><span class="tag tag-hy">High</span></td></tr>
-          <tr><td><b>Corporate / Medical / Educational</b></td><td>Work Beyond Stress exists; B2B minimal</td><td>30,000–80,000</td><td>B2B partnerships; corporate wellness contracts</td><td><span class="tag tag-hy">High</span></td></tr>
-          <tr><td><b>Free Top-of-Funnel</b></td><td>Active in some cities</td><td>Drives 20–30% of above</td><td>Run free events in all 60 cities; IDY June 21</td><td><span class="tag tag-hy">High</span></td></tr>
-          <tr><td><b>Influencer Network</b></td><td>Ad hoc</td><td>20,000–40,000</td><td>Structured influencer program; podcasts; YouTube collab</td><td><span class="tag tag-free">Medium</span></td></tr>
-          <tr><td><b>Events & Partnerships</b></td><td>Annual mega-events</td><td>15,000–30,000</td><td>Post-Mahashivratri + post-Guru Purnima enrollment push</td><td><span class="tag tag-free">Medium</span></td></tr>
-          <tr><td><b>Books & Isha Life Products</b></td><td>Active</td><td>10,000–20,000</td><td>Product buyers → IE enrollment CTA</td><td><span class="tag tag-free">Medium</span></td></tr>
-          <tr><td><b>Special Groups (Veterans/Students/Seniors)</b></td><td>Veteran access active</td><td>10,000–25,000</td><td>Expand all access tracks; scholarship fund campaign</td><td><span class="tag tag-free">Medium</span></td></tr>
-          <tr><td><b>Alumni / Advanced Practitioners</b></td><td>Informal referrals only</td><td>15,000–30,000</td><td>Structured alumni referral program with tracking</td><td><span class="tag tag-hy">High</span></td></tr>
-          <tr><td><b>Scholarship / Donor-Funded</b></td><td>Exists — small scale</td><td>5,000–15,000</td><td>Giving Tuesday + year-end fundraising campaign</td><td><span class="tag tag-free">Medium</span></td></tr>
+          <tr><td><b>Digital / App-Led Online IE</b></td><td>Running. 54,360 enrolled this cohort at 61.2% completion</td><td>150,000–200,000</td><td>Scale reach; close the Step 4 and Step 6 drop-off with automated nudges</td><td>61.2% (real, from IEO tracker)</td><td><span class="tag tag-ie">Highest</span></td></tr>
+          <tr><td><b>Re-engage expired students</b></td><td>13,994 expired — zero-cost opportunity inside existing system</td><td>4,000–7,000</td><td>Targeted re-engagement campaign; offer Step 7 scheduling assistance</td><td>30–50% re-activation assumed</td><td><span class="tag tag-ie">Highest (fastest win)</span></td></tr>
+          <tr><td><b>Local City Center Network</b></td><td>13 of 60 active in-person. All 55 IEO cities have online students</td><td>50,000–100,000</td><td>Activate dormant cities — they already have an enrolled online community</td><td>61.2% (align with IEO benchmark)</td><td><span class="tag tag-ie">High</span></td></tr>
+          <tr><td><b>Paid Digital / Media</b></td><td>Exists — not maximized</td><td>50,000–100,000</td><td>YouTube, Meta, Google Ads; Step 7 scheduling campaigns</td><td>61.2% baseline</td><td><span class="tag tag-ie">High</span></td></tr>
+          <tr><td><b>Ambassadors &amp; Ecosystem Referrals</b></td><td>Informal only</td><td>30,000–60,000</td><td>Formal alumni ambassador program; peer-to-peer referral tracking</td><td>Higher than avg — trust-driven</td><td><span class="tag tag-hy">High</span></td></tr>
+          <tr><td><b>Corporate / Medical / Educational</b></td><td>Work Beyond Stress exists; B2B minimal</td><td>30,000–80,000</td><td>B2B partnerships; corporate wellness contracts in Chicago, SF, Houston, DC</td><td>60–65% (employer accountability boost)</td><td><span class="tag tag-hy">High</span></td></tr>
+          <tr><td><b>Completion Rate Improvement</b></td><td>61.2% today — each point gained = ~544 more completions per 54K cohort</td><td>+5,000–15,000 from rate lift</td><td>Step 4 nudge campaign; Step 7 scheduling support; satsang re-engagement</td><td>Target: 68–70%</td><td><span class="tag tag-hy">High</span></td></tr>
+          <tr><td><b>Free Top-of-Funnel</b></td><td>Active in some cities; International Yoga Day June 21</td><td>Drives 20–30% of above channels</td><td>Run free events in all 60 cities; IDY June 21 synchronized nationally</td><td>N/A (feeds enrollment, not completion)</td><td><span class="tag tag-hy">High</span></td></tr>
+          <tr><td><b>Influencer Network</b></td><td>Ad hoc</td><td>20,000–40,000</td><td>Structured influencer program; podcasts; YouTube collab</td><td>61.2% baseline</td><td><span class="tag tag-free">Medium</span></td></tr>
+          <tr><td><b>Events, Partnerships &amp; Books</b></td><td>Annual mega-events (Mahashivratri, Guru Purnima)</td><td>15,000–30,000</td><td>Post-event IE enrollment push within 7 days of each event</td><td>61.2% baseline</td><td><span class="tag tag-free">Medium</span></td></tr>
+          <tr><td><b>Special Groups (Veterans/Students/Seniors)</b></td><td>Veteran access active</td><td>10,000–25,000</td><td>Expand access tracks; run completion support for these groups</td><td>May be higher — mission-driven groups</td><td><span class="tag tag-free">Medium</span></td></tr>
+          <tr><td><b>Scholarship / Donor-Funded</b></td><td>Small scale</td><td>5,000–15,000</td><td>Giving Tuesday + year-end fundraising; fund Step 7 completion support</td><td>61.2% baseline</td><td><span class="tag tag-free">Medium</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -500,10 +641,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-
-// ══════════════════════════════════════════════════════
-// DATA
-// ══════════════════════════════════════════════════════
 const PROGRAMS = [
   {city:"Isha Institute of Inner-Sciences",state:"TN",country:"USA",centerType:"Flagship Campus",programName:"Inner Engineering Retreat (4-day residential)",programCategory:"Beginner",programType:"Inner Engineering In-Person",startDate:"Year-round",endDate:"Year-round",venueName:"Isha Institute of Inner-Sciences",address:"951 Isha Lane, McMinnville, TN 37110",status:"✅ Live Data"},
   {city:"Isha Institute of Inner-Sciences",state:"TN",country:"USA",centerType:"Flagship Campus",programName:"Hatha Yoga Programs (Angamardana, Surya Kriya, Yogasanas)",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Year-round",endDate:"Year-round",venueName:"Isha Institute of Inner-Sciences",address:"951 Isha Lane, McMinnville, TN 37110",status:"✅ Live Data"},
@@ -631,16 +768,71 @@ const PROGRAMS = [
   {city:"Regina",state:"SK",country:"Canada",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
 ];
 
-// ══════════════════════════════════════════════════════
-// SIMULATOR CHANNELS
-// ══════════════════════════════════════════════════════
+
+const IEO_CITIES = [
+  {city:"Toronto",       region:"East",    cohort:4619,  completed:2982, pct:65.0},
+  {city:"San Francisco", region:"West",    cohort:3816,  completed:2269, pct:59.5},
+  {city:"Latin America", region:"West",    cohort:3619,  completed:2216, pct:64.0},
+  {city:"Dallas",        region:"West",    cohort:2788,  completed:1779, pct:63.8},
+  {city:"Atlanta",       region:"East",    cohort:1902,  completed:1142, pct:60.0},
+  {city:"New Jersey",    region:"East",    cohort:1790,  completed:1143, pct:63.9},
+  {city:"New York",      region:"East",    cohort:1744,  completed:948,  pct:54.4},
+  {city:"Seattle",       region:"West",    cohort:1500,  completed:930,  pct:58.3},
+  {city:"Vancouver",     region:"West",    cohort:1436,  completed:862,  pct:60.0},
+  {city:"Chicago",       region:"Midwest", cohort:1429,  completed:830,  pct:58.1},
+  {city:"Boston",        region:"East",    cohort:1381,  completed:824,  pct:59.7},
+  {city:"Charlotte",     region:"East",    cohort:1316,  completed:810,  pct:61.5},
+  {city:"Philadelphia",  region:"East",    cohort:1293,  completed:786,  pct:60.8},
+  {city:"Washington DC", region:"East",    cohort:1261,  completed:768,  pct:60.9},
+  {city:"Los Angeles",   region:"West",    cohort:1257,  completed:630,  pct:50.1},
+  {city:"Austin",        region:"West",    cohort:1210,  completed:727,  pct:60.1},
+  {city:"Montreal",      region:"East",    cohort:1193,  completed:717,  pct:60.1},
+  {city:"Houston",       region:"West",    cohort:1030,  completed:595,  pct:57.8},
+  {city:"Orange County", region:"West",    cohort:858,   completed:478,  pct:55.7},
+  {city:"West Palm Beach",region:"East",   cohort:848,   completed:397,  pct:46.8},
+  {city:"Detroit",       region:"Midwest", cohort:832,   completed:511,  pct:61.4},
+  {city:"Phoenix",       region:"West",    cohort:782,   completed:470,  pct:60.1},
+  {city:"Tampa Bay",     region:"East",    cohort:734,   completed:423,  pct:57.6},
+  {city:"Nashville",     region:"Midwest", cohort:716,   completed:396,  pct:55.3},
+  {city:"Minneapolis",   region:"Midwest", cohort:671,   completed:405,  pct:60.4},
+  {city:"Raleigh",       region:"East",    cohort:669,   completed:406,  pct:60.7},
+  {city:"Maryland",      region:"East",    cohort:636,   completed:396,  pct:62.3},
+  {city:"Denver",        region:"West",    cohort:605,   completed:333,  pct:55.0},
+  {city:"Connecticut",   region:"East",    cohort:574,   completed:337,  pct:58.7},
+  {city:"Calgary",       region:"West",    cohort:515,   completed:332,  pct:64.4},
+  {city:"Sacramento",    region:"West",    cohort:449,   completed:272,  pct:60.6},
+  {city:"Ottawa",        region:"East",    cohort:445,   completed:291,  pct:65.4},
+  {city:"San Diego",     region:"West",    cohort:431,   completed:226,  pct:52.4},
+  {city:"Edmonton",      region:"West",    cohort:379,   completed:236,  pct:62.3},
+  {city:"Memphis",       region:"East",    cohort:375,   completed:222,  pct:59.2},
+  {city:"Portland",      region:"West",    cohort:375,   completed:225,  pct:60.4},
+  {city:"Columbus",      region:"Midwest", cohort:351,   completed:222,  pct:63.2},
+  {city:"Indianapolis",  region:"Midwest", cohort:318,   completed:203,  pct:63.5},
+  {city:"St. Louis",     region:"Midwest", cohort:306,   completed:195,  pct:63.7},
+  {city:"Rochester",     region:"East",    cohort:300,   completed:169,  pct:56.3},
+  {city:"Milwaukee",     region:"Midwest", cohort:289,   completed:179,  pct:31.9},
+  {city:"Pittsburgh",    region:"East",    cohort:280,   completed:173,  pct:61.5},
+  {city:"Richmond",      region:"East",    cohort:272,   completed:164,  pct:60.3},
+  {city:"Cincinnati",    region:"Midwest", cohort:226,   completed:151,  pct:66.8},
+  {city:"Salt Lake City",region:"West",    cohort:323,   completed:131,  pct:58.7},
+  {city:"Cleveland",     region:"Midwest", cohort:211,   completed:124,  pct:58.8},
+  {city:"Kansas City",   region:"Midwest", cohort:197,   completed:122,  pct:61.9},
+  {city:"Louisville",    region:"Midwest", cohort:183,   completed:119,  pct:65.0},
+  {city:"San Antonio",   region:"West",    cohort:147,   completed:86,   pct:58.5},
+  {city:"Chattanooga",   region:"Midwest", cohort:120,   completed:89,   pct:74.2},
+  {city:"Dayton",        region:"Midwest", cohort:100,   completed:67,   pct:67.0},
+  {city:"Montana",       region:"West",    cohort:4,     completed:1,    pct:25.0},
+  {city:"Sarasota",      region:"East",    cohort:0,     completed:0,    pct:0.0},
+];
+
+
 const CHANNELS = [
   { id:"digital", name:"Digital / App-Led Online IE", color:"#2563eb", icon:"ti-device-mobile",
     sliders:[
       {id:"dig_reach", label:"Monthly digital reach (M)", min:1, max:50, step:1, val:10, unit:"M"},
       {id:"dig_conv",  label:"Reach → free tool trial %", min:0.5, max:8, step:0.5, val:2, unit:"%"},
       {id:"dig_ie",    label:"Trial → IE enrollment %", min:5, max:40, step:1, val:15, unit:"%"},
-      {id:"dig_comp",  label:"Enrolled → completion %", min:50, max:95, step:5, val:70, unit:"%"},
+      {id:"dig_comp",  label:"Enrolled → completion %", min:50, max:95, step:5, val:61, unit:"%"},
     ]
   },
   { id:"cities", name:"Local City Center Network", color:"#16a34a", icon:"ti-map-pin",
@@ -648,7 +840,7 @@ const CHANNELS = [
       {id:"cit_active", label:"Active cities (of 60)", min:1, max:60, step:1, val:13, unit:""},
       {id:"cit_cohorts",label:"IE cohorts/city/year", min:1, max:24, step:1, val:4, unit:""},
       {id:"cit_size",   label:"Avg cohort size", min:10, max:100, step:5, val:30, unit:"ppl"},
-      {id:"cit_comp",   label:"Completion rate %", min:50, max:95, step:5, val:75, unit:"%"},
+      {id:"cit_comp",   label:"Completion rate %", min:50, max:95, step:5, val:61, unit:"%"},
     ]
   },
   { id:"paid", name:"Paid Digital / Media", color:"#0891b2", icon:"ti-ad",
@@ -695,28 +887,22 @@ const CHANNELS = [
   },
 ];
 
-// ══════════════════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════════════════
+// ══ STATE ══
 let sortKey = 'city', sortDir = 1;
 let cityFilter = 'all';
 let simChart = null;
 
-// ══════════════════════════════════════════════════════
-// PANEL NAVIGATION
-// ══════════════════════════════════════════════════════
+// ══ NAV ══
 function showPanel(id) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('panel-'+id).classList.add('active');
   document.querySelectorAll('.nav-tab').forEach(t => {
-    if(t.getAttribute('onclick').includes("'"+id+"'")) t.classList.add('active');
+    if(t.getAttribute('onclick') && t.getAttribute('onclick').includes("'"+id+"'")) t.classList.add('active');
   });
 }
 
-// ══════════════════════════════════════════════════════
-// COMPUTED STATS
-// ══════════════════════════════════════════════════════
+// ══ COMPUTED STATS ══
 function computeStats() {
   const live = PROGRAMS.filter(p => p.status === '✅ Live Data');
   const cities = [...new Set(PROGRAMS.map(p=>p.city))];
@@ -728,31 +914,24 @@ function computeStats() {
   return { live, cities, activeCities, zeroCities, ie, hy, fr, total: live.length };
 }
 
-// ══════════════════════════════════════════════════════
-// OVERVIEW PANEL
-// ══════════════════════════════════════════════════════
+// ══ OVERVIEW ══
 function buildOverview() {
   const s = computeStats();
   document.getElementById('h-total-programs').textContent = s.total;
   document.getElementById('h-active-cities').textContent = s.activeCities.length;
-  document.getElementById('h-dormant').textContent = s.zeroCities.length;
   document.getElementById('prog-badge').textContent = PROGRAMS.length;
-
   document.getElementById('ov-ie').textContent = s.ie.length;
   document.getElementById('ov-ie-cities').textContent = [...new Set(s.ie.map(p=>p.city))].length;
-  document.getElementById('ov-ie-gap').textContent = `${s.zeroCities.length} cities have none`;
+  document.getElementById('ov-ie-gap').textContent = (60-[...new Set(s.ie.map(p=>p.city))].length)+' cities have none';
   document.getElementById('ov-hy').textContent = s.hy.length;
   document.getElementById('ov-hy-cities').textContent = [...new Set(s.hy.map(p=>p.city))].length;
   document.getElementById('ov-free').textContent = s.fr.length;
   document.getElementById('ov-free-cities').textContent = [...new Set(s.fr.map(p=>p.city))].length;
   document.getElementById('ov-zero').textContent = s.zeroCities.length;
-  document.getElementById('ov-zero-pct').textContent = Math.round(s.zeroCities.length / s.cities.length * 100) + '% of all cities';
-
-  const activePct = Math.round(s.activeCities.length / s.cities.length * 100);
-  const ieCities = [...new Set(s.ie.map(p=>p.city))].length;
-  const iePct = Math.round(ieCities / s.cities.length * 100);
-  const hyCities = [...new Set(s.hy.map(p=>p.city))].length;
-  const hyPct = Math.round(hyCities / s.cities.length * 100);
+  document.getElementById('ov-zero-pct').textContent = Math.round(s.zeroCities.length/s.cities.length*100)+'% of all cities';
+  const activePct = Math.round(s.activeCities.length/s.cities.length*100);
+  const iePct = Math.round([...new Set(s.ie.map(p=>p.city))].length/s.cities.length*100);
+  const hyPct = Math.round([...new Set(s.hy.map(p=>p.city))].length/s.cities.length*100);
   document.getElementById('active-pct').textContent = activePct+'%';
   document.getElementById('ie-pct').textContent = iePct+'%';
   document.getElementById('hy-pct').textContent = hyPct+'%';
@@ -760,43 +939,36 @@ function buildOverview() {
   document.getElementById('ie-bar').style.width = iePct+'%';
   document.getElementById('hy-bar').style.width = hyPct+'%';
 
-  // Type chart
-  const tc = document.getElementById('chart-type');
-  const typeData = [s.ie.length, s.hy.length, s.fr.length,
-    s.live.filter(p=>p.programType==='Advanced').length];
+  const typeData = [s.ie.length, s.hy.length, s.fr.length, s.live.filter(p=>p.programType==='Advanced').length];
   const typeLabels = ['IE In-Person','Hatha Yoga','Free Events','Advanced'];
   const typeColors = ['#2563eb','#16a34a','#d97706','#9333ea'];
-  new Chart(tc, {
+  new Chart(document.getElementById('chart-type'), {
     type:'doughnut',
     data:{ labels:typeLabels, datasets:[{ data:typeData, backgroundColor:typeColors, borderWidth:2, borderColor:'#fff' }] },
     options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} } }
   });
   const leg = document.getElementById('chart-type-legend');
   typeLabels.forEach((l,i) => {
-    const s2 = document.createElement('span');
-    s2.style.cssText='display:flex;align-items:center;gap:4px;';
-    s2.innerHTML=`<span style="width:10px;height:10px;border-radius:2px;background:${typeColors[i]};display:inline-block;"></span>${l} (${typeData[i]})`;
-    leg.appendChild(s2);
+    const sp = document.createElement('span');
+    sp.style.cssText='display:flex;align-items:center;gap:4px;';
+    sp.innerHTML=`<span style="width:10px;height:10px;border-radius:2px;background:${typeColors[i]};display:inline-block;"></span>${l} (${typeData[i]})`;
+    leg.appendChild(sp);
   });
 
-  // City chart
   const cityCount = {};
   s.live.forEach(p => { cityCount[p.city] = (cityCount[p.city]||0)+1; });
   const sorted = Object.entries(cityCount).sort((a,b)=>b[1]-a[1]).slice(0,12);
   new Chart(document.getElementById('chart-city'), {
     type:'bar',
-    data:{ labels:sorted.map(x=>x[0].replace(' / New England','').replace(' / New England','')), datasets:[{ label:'Programs', data:sorted.map(x=>x[1]), backgroundColor:'#1F2937', borderRadius:3 }] },
+    data:{ labels:sorted.map(x=>x[0].replace(' / New England','')), datasets:[{ label:'Programs', data:sorted.map(x=>x[1]), backgroundColor:'#1F2937', borderRadius:3 }] },
     options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{ticks:{font:{size:10},maxRotation:40}}, y:{beginAtZero:true,ticks:{stepSize:2}} } }
   });
 
-  // Monthly chart
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const monthly = Array(12).fill(0);
   s.live.forEach(p => {
     months.forEach((m,i) => { if(p.startDate && p.startDate.includes(m)) monthly[i]++; });
-    if(p.startDate==='Year-round'||p.startDate==='Daily'||p.startDate==='Periodic') {
-      for(let i=0;i<12;i++) monthly[i]+=0.5;
-    }
+    if(['Year-round','Daily','Periodic'].includes(p.startDate)) for(let i=0;i<12;i++) monthly[i]+=0.5;
   });
   new Chart(document.getElementById('chart-monthly'), {
     type:'bar',
@@ -804,7 +976,6 @@ function buildOverview() {
     options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{ticks:{font:{size:11}}}, y:{beginAtZero:true} } }
   });
 
-  // Country chart
   const usa = s.live.filter(p=>p.country==='USA').length;
   const can = s.live.filter(p=>p.country==='Canada').length;
   new Chart(document.getElementById('chart-country'), {
@@ -814,14 +985,75 @@ function buildOverview() {
   });
 }
 
-// ══════════════════════════════════════════════════════
-// PROGRAMS TABLE
-// ══════════════════════════════════════════════════════
+// ══ IEO PANEL ══
+function buildIEOPanel() {
+  const top20 = IEO_CITIES.slice(0,20);
+  new Chart(document.getElementById('chart-ieo-pct'), {
+    type:'bar',
+    data:{ labels:top20.map(c=>c.city), datasets:[{ label:'Completion %', data:top20.map(c=>c.pct),
+      backgroundColor:top20.map(c=>c.pct>=65?'#16a34a':c.pct>=58?'#d97706':'#dc2626'), borderRadius:3 }] },
+    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      plugins:{ legend:{display:false} },
+      scales:{ x:{min:0,max:80,ticks:{callback:v=>v+'%'}}, y:{ticks:{font:{size:10}}} }
+    }
+  });
+
+  new Chart(document.getElementById('chart-ieo-cohort'), {
+    type:'bar',
+    data:{ labels:top20.map(c=>c.city),
+      datasets:[
+        { label:'Enrolled', data:top20.map(c=>c.cohort), backgroundColor:'#bfdbfe', borderRadius:3 },
+        { label:'Completed', data:top20.map(c=>c.completed), backgroundColor:'#2563eb', borderRadius:3 }
+      ] },
+    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      plugins:{ legend:{display:true, position:'top', labels:{font:{size:11},boxWidth:10} } },
+      scales:{ x:{beginAtZero:true,stacked:false}, y:{ticks:{font:{size:10}}} }
+    }
+  });
+
+  renderIEOTable();
+}
+
+function renderIEOTable() {
+  const q = (document.getElementById('ieo-search').value||'').toLowerCase();
+  const region = document.getElementById('ieo-region').value;
+  const sortBy = document.getElementById('ieo-sort').value;
+  let data = IEO_CITIES.filter(c => {
+    if(q && !c.city.toLowerCase().includes(q)) return false;
+    if(region && c.region !== region) return false;
+    return true;
+  });
+  if(sortBy==='cohort') data.sort((a,b)=>b.cohort-a.cohort);
+  else if(sortBy==='completed') data.sort((a,b)=>b.completed-a.completed);
+  else if(sortBy==='pct') data.sort((a,b)=>b.pct-a.pct);
+  else if(sortBy==='pct_asc') data.sort((a,b)=>a.pct-b.pct);
+
+  const totalCohort = IEO_CITIES.reduce((s,c)=>s+c.cohort,0);
+  // Per-city 500K quota: proportional to cohort share, target 500K completions total
+  const tbody = document.getElementById('ieo-tbody');
+  tbody.innerHTML = data.map((c,i) => {
+    const pctClass = c.pct>=65?'pct-good':c.pct>=55?'pct-warn':'pct-bad';
+    const barW = Math.round(c.pct/80*100);
+    const quota = Math.round(c.cohort/totalCohort*500000);
+    const gap = quota - c.completed;
+    return `<tr>
+      <td style="color:var(--text3);">${i+1}</td>
+      <td><b>${c.city}</b></td>
+      <td><span style="font-size:11px;background:#f1f5f9;padding:2px 7px;border-radius:10px;">${c.region}</span></td>
+      <td>${c.cohort.toLocaleString()}</td>
+      <td>${c.completed.toLocaleString()}</td>
+      <td class="${pctClass}">${c.pct.toFixed(1)}%</td>
+      <td style="min-width:100px;"><div style="background:#e5e7eb;height:6px;border-radius:3px;overflow:hidden;"><div style="width:${barW}%;height:100%;background:${c.pct>=65?'#16a34a':c.pct>=55?'#d97706':'#dc2626'};border-radius:3px;"></div></div></td>
+      <td style="font-size:11.5px;color:${gap>0?'#dc2626':'#16a34a'};">${gap>0?'+'+gap.toLocaleString()+' needed':'Target met'}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ══ PROGRAMS TABLE ══
 function sortTable(key) {
   if(sortKey===key) sortDir*=-1; else { sortKey=key; sortDir=1; }
   renderTable();
 }
-
 function resetFilters() {
   document.getElementById('search-input').value='';
   document.getElementById('filter-type').value='';
@@ -829,57 +1061,75 @@ function resetFilters() {
   document.getElementById('filter-status').value='';
   renderTable();
 }
-
 function typeTag(t) {
   const map = {'Inner Engineering In-Person':'tag-ie','Hatha Yoga':'tag-hy','Free Event/Intro':'tag-free','Advanced':'tag-adv','Flagship Campus':'tag-camp'};
   return `<span class="tag ${map[t]||'tag-none'}">${t}</span>`;
 }
-
 function renderTable() {
   const q = (document.getElementById('search-input').value||'').toLowerCase();
   const ft = document.getElementById('filter-type').value;
   const fc = document.getElementById('filter-country').value;
   const fs = document.getElementById('filter-status').value;
-
   let data = PROGRAMS.filter(p => {
-    const search = (p.city+p.programName+p.venueName+p.address).toLowerCase();
-    if(q && !search.includes(q)) return false;
+    if(q && !(p.city+p.programName+p.venueName+p.address).toLowerCase().includes(q)) return false;
     if(ft && p.programType!==ft) return false;
     if(fc && p.country!==fc) return false;
     if(fs && p.status!==fs) return false;
     return true;
   });
-
-  data.sort((a,b) => {
-    const av=a[sortKey]||'', bv=b[sortKey]||'';
-    return av.localeCompare(bv)*sortDir;
-  });
-
+  data.sort((a,b) => (a[sortKey]||'').localeCompare(b[sortKey]||'')*sortDir);
   const tbody = document.getElementById('program-tbody');
-  tbody.innerHTML = data.map((p,i) => `
+  tbody.innerHTML = data.map(p => `
     <tr>
-      <td><b>${p.city}</b></td>
-      <td>${p.state}</td>
-      <td>${p.country}</td>
+      <td><b>${p.city}</b></td><td>${p.state}</td><td>${p.country}</td>
       <td>${p.centerType==='Flagship Campus'?'<span class="tag tag-camp">Flagship</span>':'<span class="tag tag-none">City</span>'}</td>
-      <td>${p.programName}</td>
-      <td>${typeTag(p.programType)}</td>
-      <td style="white-space:nowrap">${p.startDate}</td>
-      <td style="white-space:nowrap">${p.endDate}</td>
-      <td>${p.venueName}</td>
-      <td style="font-size:11.5px;color:var(--text3)">${p.address}</td>
-    </tr>
-  `).join('');
-
+      <td>${p.programName}</td><td>${typeTag(p.programType)}</td>
+      <td style="white-space:nowrap">${p.startDate}</td><td style="white-space:nowrap">${p.endDate}</td>
+      <td>${p.venueName}</td><td style="font-size:11.5px;color:var(--text3)">${p.address}</td>
+    </tr>`).join('');
   document.getElementById('prog-count').textContent = `${data.length} of ${PROGRAMS.length} rows`;
   document.getElementById('prog-badge').textContent = data.length;
 }
 
-// ══════════════════════════════════════════════════════
-// CITIES PANEL
-// ══════════════════════════════════════════════════════
+// ══ CITIES ══
+// ══ CITIES — state ══
+let cityViewMode = 'bubble';  // 'bubble' | 'grid'
+let bubbleChart  = null;
+
+function setCityView(mode) {
+  cityViewMode = mode;
+  document.getElementById('cities-bubble-view').style.display = mode==='bubble' ? 'block' : 'none';
+  document.getElementById('cities-grid-view').style.display   = mode==='grid'   ? 'block' : 'none';
+  document.getElementById('view-bubble').style.background = mode==='bubble' ? '#1F2937' : '#fff';
+  document.getElementById('view-bubble').style.color      = mode==='bubble' ? '#fff'    : '#555';
+  document.getElementById('view-grid').style.background   = mode==='grid'   ? '#1F2937' : '#fff';
+  document.getElementById('view-grid').style.color        = mode==='grid'   ? '#fff'    : '#555';
+  if(mode==='bubble') renderBubbleChart(window._cityMap);
+  else                renderCityGrid(window._cityMap);
+}
+
+function setCityFilter(f) {
+  cityFilter = f;
+  // highlight active filter btn
+  ['all','act','zero','can'].forEach(id => {
+    const b = document.getElementById('cf-'+id);
+    if(b) { b.style.background=''; b.style.color=''; b.style.borderColor=''; }
+  });
+  const map = {all:'cf-all',active:'cf-act',zero:'cf-zero',canada:'cf-can'};
+  const btn = document.getElementById(map[f]);
+  if(btn) { btn.style.background='#1F2937'; btn.style.color='#fff'; btn.style.borderColor='#1F2937'; }
+  if(cityViewMode==='bubble') renderBubbleChart(window._cityMap);
+  else renderCityGrid(window._cityMap);
+}
+
+function filterByMode(cities) {
+  if(cityFilter==='active') return cities.filter(c=>c.hasData);
+  if(cityFilter==='zero')   return cities.filter(c=>!c.hasData);
+  if(cityFilter==='canada') return cities.filter(c=>c.country==='Canada');
+  return cities;
+}
+
 function buildCities() {
-  const s = computeStats();
   const cityMap = {};
   PROGRAMS.forEach(p => {
     if(!cityMap[p.city]) cityMap[p.city]={city:p.city,state:p.state,country:p.country,ie:0,hy:0,free:0,adv:0,programs:[],hasData:false};
@@ -889,65 +1139,216 @@ function buildCities() {
       else if(p.programType==='Hatha Yoga') cityMap[p.city].hy++;
       else if(p.programType==='Free Event/Intro') cityMap[p.city].free++;
       else if(p.programType==='Advanced') cityMap[p.city].adv++;
-      cityMap[p.city].programs.push(p);
-    } else {
-      cityMap[p.city].programs.push(p);
     }
+    cityMap[p.city].programs.push(p);
+  });
+  IEO_CITIES.forEach(ic => {
+    const key = Object.keys(cityMap).find(k=>k.toLowerCase().includes(ic.city.toLowerCase())||ic.city.toLowerCase().includes(k.toLowerCase()));
+    if(key) { cityMap[key].ieoEnrolled=ic.cohort; cityMap[key].ieoCompleted=ic.completed; cityMap[key].ieoPct=ic.pct; }
+  });
+  window._cityMap = cityMap;
+  // default: bubble view, all filter highlighted
+  setCityFilter('all');
+  setCityView('bubble');
+}
+
+// ── BUBBLE CHART ──────────────────────────────────────
+function getCityColor(c) {
+  if(c.centerType==='Flagship Campus'||c.city.includes('Isha Institute')||c.city.includes('Isha Yoga Center LA')) return '#7c3aed';
+  if(c.ie>0)   return '#2563eb';
+  if(c.hy>0)   return '#16a34a';
+  if(c.free>0) return '#d97706';
+  return '#9ca3af';
+}
+
+function renderBubbleChart(cityMap) {
+  const all   = Object.values(cityMap);
+  const cities = filterByMode(all);
+
+  // Build bubble dataset — x=IEO enrolled (or index), y=total in-person programs, r=bubble radius
+  const maxIEO   = Math.max(...cities.map(c=>c.ieoEnrolled||0), 1);
+  const maxTotal = Math.max(...cities.map(c=>c.ie+c.hy+c.free+c.adv), 1);
+
+  // Sort: flagship first, then by total programs desc, then dormant
+  const sorted = [...cities].sort((a,b) => {
+    const at=a.ie+a.hy+a.free+a.adv, bt=b.ie+b.hy+b.free+b.adv;
+    return bt-at;
   });
 
-  window._cityMap = cityMap;
-  renderCities(cityMap);
+  // For x-axis: use IEO enrolled if available; otherwise spread evenly
+  const data = sorted.map((c, i) => {
+    const total = c.ie+c.hy+c.free+c.adv;
+    const xVal  = c.ieoEnrolled || 0;
+    const yVal  = total;
+    // radius: min 6 (dormant), scale up by program count
+    const radius = total===0 ? 5 : Math.max(7, Math.min(36, 7 + total * 3.2));
+    return {
+      x: xVal,
+      y: yVal,
+      r: radius,
+      city: c,
+      label: c.city
+    };
+  });
+
+  if(bubbleChart) { bubbleChart.destroy(); bubbleChart=null; }
+
+  const canvas = document.getElementById('bubble-chart');
+  bubbleChart = new Chart(canvas, {
+    type: 'bubble',
+    data: {
+      datasets: [{
+        label: 'Cities',
+        data: data,
+        backgroundColor: data.map(d => getCityColor(d.city)+'cc'),
+        borderColor:     data.map(d => getCityColor(d.city)),
+        borderWidth: 1.5,
+        hoverBorderWidth: 2.5,
+        hoverBorderColor: '#1F2937',
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: { padding: { top: 20, right: 20, bottom: 10, left: 10 } },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const c = ctx.raw.city;
+              const total = c.ie+c.hy+c.free+c.adv;
+              const lines = [
+                `  ${c.city} · ${c.state} · ${c.country}`,
+                `  In-person programs: ${total}`,
+              ];
+              if(c.ie>0)   lines.push(`    IE In-Person: ${c.ie}`);
+              if(c.hy>0)   lines.push(`    Hatha Yoga: ${c.hy}`);
+              if(c.free>0) lines.push(`    Free events: ${c.free}`);
+              if(c.ieoEnrolled) lines.push(`  IEO online: ${c.ieoEnrolled.toLocaleString()} enrolled · ${c.ieoPct}% complete`);
+              if(total===0) lines.push(`  ⚠ No in-person programs scheduled`);
+              return lines;
+            },
+            title: () => ''
+          },
+          backgroundColor: 'rgba(15,23,42,0.92)',
+          bodyColor: '#e2e8f0',
+          bodyFont: { size: 12 },
+          padding: 12,
+          cornerRadius: 8,
+          displayColors: false
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'IEO online students enrolled →', color: '#888', font: { size: 11 } },
+          ticks: { font: { size: 10 }, callback: v => v>=1000 ? Math.round(v/1000)+'K' : v },
+          grid: { color: 'rgba(0,0,0,0.05)' }
+        },
+        y: {
+          title: { display: true, text: '← In-person programs scheduled', color: '#888', font: { size: 11 } },
+          beginAtZero: true,
+          ticks: { stepSize: 1, font: { size: 10 } },
+          grid: { color: 'rgba(0,0,0,0.05)' }
+        }
+      },
+      onClick: (evt, elements) => {
+        if(elements.length > 0) {
+          const d = data[elements[0].index];
+          showCityDetail(d.city.city);
+        }
+      }
+    },
+    plugins: [{
+      id: 'cityLabels',
+      afterDatasetsDraw(chart) {
+        const ctx = chart.ctx;
+        const ds  = chart.data.datasets[0];
+        chart.getDatasetMeta(0).data.forEach((el, i) => {
+          const d     = data[i];
+          const total = d.city.ie+d.city.hy+d.city.free+d.city.adv;
+          const r     = d.r;
+          // Only label if bubble is large enough to fit text
+          if(r >= 10) {
+            const name  = d.city.city.replace(' / New England','').replace('Isha Institute of Inner-Sciences','IIIS').replace('Isha Yoga Center LA','IYC-LA');
+            const short = name.length > 14 ? name.slice(0,12)+'…' : name;
+            ctx.save();
+            ctx.fillStyle = '#fff';
+            ctx.font      = `${r>=18?'600 ':''}${Math.min(11, Math.max(8, r*0.5))}px system-ui`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(short, el.x, el.y);
+            ctx.restore();
+          }
+        });
+      }
+    }]
+  });
 }
 
-function filterCities(f) {
-  cityFilter = f;
-  renderCities(window._cityMap);
-}
-
-function renderCities(cityMap) {
+// ── GRID / CARD VIEW ──────────────────────────────────
+function renderCityGrid(cityMap) {
   const grid = document.getElementById('city-grid');
-  let cities = Object.values(cityMap);
-  if(cityFilter==='active') cities = cities.filter(c=>c.hasData);
-  if(cityFilter==='zero') cities = cities.filter(c=>!c.hasData);
-  if(cityFilter==='canada') cities = cities.filter(c=>c.country==='Canada');
+  let cities = filterByMode(Object.values(cityMap));
   cities.sort((a,b)=>a.city.localeCompare(b.city));
-
   grid.innerHTML = cities.map(c => {
     const dots = [];
-    if(c.ie>0) dots.push(`<span class="city-dot dot-ie" title="IE In-Person"></span>`);
-    if(c.hy>0) dots.push(`<span class="city-dot dot-hy" title="Hatha Yoga"></span>`);
-    if(c.free>0) dots.push(`<span class="city-dot dot-free" title="Free Event"></span>`);
-    const total = c.ie+c.hy+c.free+c.adv;
-    return `<div class="city-card ${!c.hasData?'city-zero':''}" onclick="showCityDetail('${c.city}')">
+    if(c.ie>0)   dots.push(`<span class="city-dot dot-ie"></span>`);
+    if(c.hy>0)   dots.push(`<span class="city-dot dot-hy"></span>`);
+    if(c.free>0) dots.push(`<span class="city-dot dot-free"></span>`);
+    const total    = c.ie+c.hy+c.free+c.adv;
+    const ieoLine  = c.ieoEnrolled ? `<div style="font-size:10px;color:#2563eb;margin-top:3px;">${c.ieoEnrolled.toLocaleString()} IEO enrolled · ${c.ieoPct}% completion</div>` : '';
+    return `<div class="city-card ${!c.hasData?'city-zero':''}" onclick="showCityDetailGrid('${c.city}')">
       <div class="city-name">${c.city}</div>
       <div class="city-state">${c.state} · ${c.country}</div>
       <div class="city-programs">${dots.join('')}</div>
-      <div class="city-count">${total>0?total+' program'+(total>1?'s':''):'No programs scheduled'}</div>
+      <div class="city-count">${total>0?total+' in-person program'+(total>1?'s':''):'No in-person programs'}</div>
+      ${ieoLine}
     </div>`;
   }).join('');
 }
 
-function showCityDetail(city) {
-  const m = window._cityMap[city];
-  document.querySelectorAll('.city-card').forEach(c => c.classList.remove('active-city'));
-  document.querySelectorAll('.city-card').forEach(c => { if(c.querySelector('.city-name').textContent===city) c.classList.add('active-city'); });
-  const d = document.getElementById('city-detail');
-  d.style.display='block';
-  document.getElementById('cd-title').textContent = city + ' · ' + m.state + ' · ' + m.country;
-  const tbody = document.getElementById('cd-body');
-  tbody.innerHTML = m.programs.map(p => `
+// ── DETAIL PANELS ─────────────────────────────────────
+function buildDetailRows(m) {
+  return m.programs.map(p => `
     <tr>
       <td style="padding:6px 10px;">${p.programName}</td>
       <td style="padding:6px 10px;white-space:nowrap;">${p.startDate}${p.endDate&&p.endDate!==p.startDate?'<br>→ '+p.endDate:''}</td>
       <td style="padding:6px 10px;">${p.venueName}</td>
       <td style="padding:6px 10px;">${typeTag(p.programType)}</td>
-    </tr>
-  `).join('');
+    </tr>`).join('');
 }
 
-// ══════════════════════════════════════════════════════
-// SIMULATOR
-// ══════════════════════════════════════════════════════
+function buildDetailHeader(city, m) {
+  const ieoSummary = m.ieoEnrolled ? ` &nbsp;·&nbsp; <span style="color:#2563eb;">${m.ieoEnrolled.toLocaleString()} IEO enrolled · ${m.ieoCompleted.toLocaleString()} completed · ${m.ieoPct}% rate</span>` : '';
+  return city+' · '+m.state+' · '+m.country+ieoSummary;
+}
+
+// Bubble chart click → shows detail below bubble chart
+function showCityDetail(city) {
+  const m = window._cityMap[city];
+  if(!m) return;
+  const d = document.getElementById('city-detail');
+  d.style.display = 'block';
+  document.getElementById('cd-title').innerHTML   = buildDetailHeader(city, m);
+  document.getElementById('cd-body').innerHTML    = buildDetailRows(m);
+  d.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+// Grid card click → shows detail below grid
+function showCityDetailGrid(city) {
+  const m = window._cityMap[city];
+  if(!m) return;
+  document.querySelectorAll('.city-card').forEach(c => c.classList.remove('active-city'));
+  document.querySelectorAll('.city-card').forEach(c => { if(c.querySelector('.city-name')?.textContent===city) c.classList.add('active-city'); });
+  const d = document.getElementById('city-detail-grid');
+  d.style.display = 'block';
+  document.getElementById('cd-title-grid').innerHTML = buildDetailHeader(city, m);
+  document.getElementById('cd-body-grid').innerHTML  = buildDetailRows(m);
+  d.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+// ══ SIMULATOR ══
 function buildSimulator() {
   const grid = document.getElementById('channels-grid');
   grid.innerHTML = CHANNELS.map(ch => {
@@ -972,34 +1373,14 @@ function buildSimulator() {
 function calcChannel(ch) {
   const g = id => parseFloat(document.getElementById('s_'+id)?.value||0);
   switch(ch.id) {
-    case 'digital': {
-      const reach = g('dig_reach')*1000000;
-      const trial = reach*(g('dig_conv')/100);
-      const enrolled = trial*(g('dig_ie')/100);
-      return Math.round(enrolled*(g('dig_comp')/100));
-    }
-    case 'cities': {
-      return Math.round(g('cit_active')*g('cit_cohorts')*g('cit_size')*(g('cit_comp')/100));
-    }
-    case 'paid': {
-      const monthly = (g('pd_spend')*1000)/g('pd_cpa');
-      return Math.round(monthly*12*(g('pd_comp')/100));
-    }
-    case 'ambassadors': {
-      return Math.round(g('amb_alumni')*g('amb_ref')*(g('amb_conv')/100));
-    }
-    case 'corporate': {
-      return Math.round(g('corp_partners')*g('corp_size')*(g('corp_comp')/100));
-    }
-    case 'influencer': {
-      return Math.round(g('inf_reach')*1000000*(g('inf_conv')/100)*(g('inf_comp')/100));
-    }
-    case 'events': {
-      return Math.round(g('evt_attend')*1000*(g('evt_conv')/100)*(g('evt_comp')/100));
-    }
-    case 'special': {
-      return Math.round(g('sp_reach')*1000*(g('sp_conv')/100)*(g('sp_comp')/100));
-    }
+    case 'digital': { const reach=g('dig_reach')*1e6; return Math.round(reach*(g('dig_conv')/100)*(g('dig_ie')/100)*(g('dig_comp')/100)); }
+    case 'cities':  { return Math.round(g('cit_active')*g('cit_cohorts')*g('cit_size')*(g('cit_comp')/100)); }
+    case 'paid':    { return Math.round((g('pd_spend')*1000/g('pd_cpa'))*12*(g('pd_comp')/100)); }
+    case 'ambassadors': { return Math.round(g('amb_alumni')*g('amb_ref')*(g('amb_conv')/100)); }
+    case 'corporate':   { return Math.round(g('corp_partners')*g('corp_size')*(g('corp_comp')/100)); }
+    case 'influencer':  { return Math.round(g('inf_reach')*1e6*(g('inf_conv')/100)*(g('inf_comp')/100)); }
+    case 'events':      { return Math.round(g('evt_attend')*1000*(g('evt_conv')/100)*(g('evt_comp')/100)); }
+    case 'special':     { return Math.round(g('sp_reach')*1000*(g('sp_conv')/100)*(g('sp_comp')/100)); }
     default: return 0;
   }
 }
@@ -1007,108 +1388,137 @@ function calcChannel(ch) {
 function updateSim() {
   const target = parseInt(document.getElementById('target-slider').value);
   document.getElementById('target-val').textContent = target.toLocaleString();
-
-  const vals = CHANNELS.map(ch => { const v=calcChannel(ch); return {ch,v}; });
+  const vals = CHANNELS.map(ch => ({ch, v:calcChannel(ch)}));
   const total = vals.reduce((s,x)=>s+x.v,0);
-  const pct = Math.min(100,Math.round(total/target*100));
-  const gap = Math.max(0,target-total);
-  const active = vals.filter(x=>x.v>0).length;
-
-  vals.forEach(({ch,v}) => {
-    const el = document.getElementById('cn_'+ch.id);
-    if(el) el.innerHTML = v.toLocaleString()+' <small>completions</small>';
-  });
-
+  const pct = Math.min(100, Math.round(total/target*100));
+  const gap = Math.max(0, target-total);
+  vals.forEach(({ch,v}) => { const el=document.getElementById('cn_'+ch.id); if(el) el.innerHTML=v.toLocaleString()+' <small>completions</small>'; });
   document.getElementById('sr-total').textContent = total.toLocaleString();
   document.getElementById('sr-pct').textContent = pct+'%';
   document.getElementById('sr-gap').textContent = gap.toLocaleString();
-  document.getElementById('sr-channels').textContent = active;
+  document.getElementById('sr-channels').textContent = vals.filter(x=>x.v>0).length;
   document.getElementById('prog-to-target').textContent = `${total.toLocaleString()} / ${target.toLocaleString()}`;
   document.getElementById('main-progress').style.width = pct+'%';
   document.getElementById('main-progress').style.background = pct>=100?'#16a34a':pct>=70?'#C9A24B':'#2563eb';
-
-  const bars = document.getElementById('channel-bars');
   const maxV = Math.max(...vals.map(x=>x.v),1);
-  bars.innerHTML = vals.map(({ch,v}) => `
+  document.getElementById('channel-bars').innerHTML = vals.map(({ch,v}) => `
     <div class="ch-bar-row">
       <span class="ch-bar-label"><i class="ti ${ch.icon}" style="color:${ch.color};font-size:12px;margin-right:4px;"></i>${ch.name}</span>
-      <div class="ch-bar-track">
-        <div class="ch-bar-fill" style="width:${Math.round(v/maxV*100)}%;background:${ch.color};"></div>
-      </div>
+      <div class="ch-bar-track"><div class="ch-bar-fill" style="width:${Math.round(v/maxV*100)}%;background:${ch.color};"></div></div>
       <span class="ch-bar-val">${v.toLocaleString()}</span>
     </div>`).join('');
-
   updateSimChart(vals, total, target);
 }
 
 function updateSimChart(vals, total, target) {
-  const labels = vals.map(x => x.ch.name.replace('Digital / App-Led Online IE','Online IE').replace('Local City Center Network','City Centers').replace('Paid Digital / Media','Paid Media').replace('Ambassadors & Ecosystem Referrals','Ambassadors').replace('Corporate / Medical / Educational','Corporate').replace('Influencer Network','Influencers').replace('Events, Partnerships & Books','Events').replace('Special Groups (Veterans/Students/Seniors)','Special Groups'));
-  const data = vals.map(x=>x.v);
-  const colors = vals.map(x=>x.ch.color);
-
-  if(simChart) { simChart.destroy(); }
+  const labels = vals.map(x=>x.ch.name.replace('Digital / App-Led Online IE','Online IE').replace('Local City Center Network','City Centers').replace('Paid Digital / Media','Paid Media').replace('Ambassadors & Ecosystem Referrals','Ambassadors').replace('Corporate / Medical / Educational','Corporate').replace('Influencer Network','Influencers').replace('Events, Partnerships & Books','Events').replace('Special Groups (Veterans/Students/Seniors)','Special Groups'));
+  if(simChart) simChart.destroy();
   simChart = new Chart(document.getElementById('sim-chart'), {
     type:'bar',
-    data:{ labels, datasets:[{ label:'IE Completions', data, backgroundColor:colors, borderRadius:4 }] },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{
-        legend:{display:false},
-        annotation:{}
-      },
-      scales:{
-        x:{ticks:{font:{size:10},maxRotation:30}},
-        y:{beginAtZero:true,ticks:{callback:v=>v>=1000?Math.round(v/1000)+'K':v}}
-      }
+    data:{ labels, datasets:[{ label:'IE Completions', data:vals.map(x=>x.v), backgroundColor:vals.map(x=>x.ch.color), borderRadius:4 }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales:{ x:{ticks:{font:{size:10},maxRotation:30}}, y:{beginAtZero:true,ticks:{callback:v=>v>=1000?Math.round(v/1000)+'K':v}} }
     }
   });
 }
 
 function resetSim() {
-  CHANNELS.forEach(ch => {
-    ch.sliders.forEach(s => {
-      const el = document.getElementById('s_'+s.id);
-      const vel = document.getElementById('v_'+s.id);
-      if(el) el.value = s.val;
-      if(vel) vel.textContent = s.val+s.unit;
-    });
-  });
+  CHANNELS.forEach(ch => ch.sliders.forEach(s => {
+    const el=document.getElementById('s_'+s.id); const vel=document.getElementById('v_'+s.id);
+    if(el) el.value=s.val; if(vel&&s) vel.textContent=s.val+s.unit;
+  }));
   document.getElementById('target-slider').value=500000;
   updateSim();
 }
 
-function setSlider(id, val) {
-  const el = document.getElementById('s_'+id);
-  if(!el) return;
-  el.value = val;
-  const s = CHANNELS.flatMap(c=>c.sliders).find(s=>s.id===id);
-  const vel = document.getElementById('v_'+id);
-  if(vel&&s) vel.textContent = val+s.unit;
+function setSlider(id,val) {
+  const el=document.getElementById('s_'+id); if(!el) return; el.value=val;
+  const s=CHANNELS.flatMap(c=>c.sliders).find(s=>s.id===id);
+  const vel=document.getElementById('v_'+id); if(vel&&s) vel.textContent=val+s.unit;
 }
 
 function loadScenario(name) {
   const presets = {
-    conservative: { dig_reach:20, dig_conv:2, dig_ie:12, dig_comp:70, cit_active:13, cit_cohorts:4, cit_size:30, cit_comp:75, pd_spend:50, pd_cpa:80, pd_comp:65, amb_alumni:5000, amb_ref:1, amb_conv:40, corp_partners:20, corp_size:50, corp_comp:60, inf_reach:5, inf_conv:0.3, inf_comp:55, evt_attend:50, evt_conv:6, evt_comp:65, sp_reach:20, sp_conv:12, sp_comp:70 },
-    balanced: { dig_reach:30, dig_conv:3, dig_ie:15, dig_comp:72, cit_active:30, cit_cohorts:8, cit_size:40, cit_comp:78, pd_spend:150, pd_cpa:65, pd_comp:68, amb_alumni:15000, amb_ref:1.5, amb_conv:45, corp_partners:60, corp_size:80, corp_comp:65, inf_reach:20, inf_conv:0.5, inf_comp:60, evt_attend:120, evt_conv:8, evt_comp:70, sp_reach:60, sp_conv:18, sp_comp:75 },
-    aggressive: { dig_reach:50, dig_conv:5, dig_ie:20, dig_comp:75, cit_active:55, cit_cohorts:18, cit_size:60, cit_comp:80, pd_spend:400, pd_cpa:50, pd_comp:72, amb_alumni:40000, amb_ref:2.5, amb_conv:50, corp_partners:150, corp_size:120, corp_comp:70, inf_reach:80, inf_conv:1, inf_comp:65, evt_attend:350, evt_conv:15, evt_comp:75, sp_reach:150, sp_conv:25, sp_comp:80 },
-    cities: { dig_reach:10, dig_conv:1.5, dig_ie:10, dig_comp:68, cit_active:55, cit_cohorts:20, cit_size:55, cit_comp:82, pd_spend:80, pd_cpa:90, pd_comp:65, amb_alumni:20000, amb_ref:2, amb_conv:48, corp_partners:40, corp_size:60, corp_comp:65, inf_reach:10, inf_conv:0.4, inf_comp:58, evt_attend:80, evt_conv:10, evt_comp:72, sp_reach:40, sp_conv:20, sp_comp:76 },
-    corporate: { dig_reach:15, dig_conv:2, dig_ie:12, dig_comp:70, cit_active:20, cit_cohorts:6, cit_size:35, cit_comp:76, pd_spend:200, pd_cpa:70, pd_comp:68, amb_alumni:8000, amb_ref:1, amb_conv:42, corp_partners:180, corp_size:150, corp_comp:72, inf_reach:15, inf_conv:0.4, inf_comp:60, evt_attend:100, evt_conv:8, evt_comp:70, sp_reach:30, sp_conv:15, sp_comp:74 },
+    conservative: {dig_reach:20,dig_conv:2,dig_ie:12,dig_comp:61,cit_active:13,cit_cohorts:4,cit_size:30,cit_comp:61,pd_spend:50,pd_cpa:80,pd_comp:61,amb_alumni:5000,amb_ref:1,amb_conv:40,corp_partners:20,corp_size:50,corp_comp:61,inf_reach:5,inf_conv:0.3,inf_comp:55,evt_attend:50,evt_conv:6,evt_comp:61,sp_reach:20,sp_conv:12,sp_comp:65},
+    balanced: {dig_reach:30,dig_conv:3,dig_ie:15,dig_comp:63,cit_active:30,cit_cohorts:8,cit_size:40,cit_comp:63,pd_spend:150,pd_cpa:65,pd_comp:63,amb_alumni:15000,amb_ref:1.5,amb_conv:45,corp_partners:60,corp_size:80,corp_comp:63,inf_reach:20,inf_conv:0.5,inf_comp:61,evt_attend:120,evt_conv:8,evt_comp:63,sp_reach:60,sp_conv:18,sp_comp:66},
+    aggressive: {dig_reach:50,dig_conv:5,dig_ie:20,dig_comp:68,cit_active:55,cit_cohorts:18,cit_size:60,cit_comp:68,pd_spend:400,pd_cpa:50,pd_comp:68,amb_alumni:40000,amb_ref:2.5,amb_conv:50,corp_partners:150,corp_size:120,corp_comp:68,inf_reach:80,inf_conv:1,inf_comp:65,evt_attend:350,evt_conv:15,evt_comp:68,sp_reach:150,sp_conv:25,sp_comp:72},
+    cities: {dig_reach:10,dig_conv:1.5,dig_ie:10,dig_comp:61,cit_active:55,cit_cohorts:20,cit_size:55,cit_comp:65,pd_spend:80,pd_cpa:90,pd_comp:61,amb_alumni:20000,amb_ref:2,amb_conv:48,corp_partners:40,corp_size:60,corp_comp:63,inf_reach:10,inf_conv:0.4,inf_comp:58,evt_attend:80,evt_conv:10,evt_comp:63,sp_reach:40,sp_conv:20,sp_comp:66},
+    corporate: {dig_reach:15,dig_conv:2,dig_ie:12,dig_comp:63,cit_active:20,cit_cohorts:6,cit_size:35,cit_comp:63,pd_spend:200,pd_cpa:70,pd_comp:63,amb_alumni:8000,amb_ref:1,amb_conv:42,corp_partners:180,corp_size:150,corp_comp:65,inf_reach:15,inf_conv:0.4,inf_comp:61,evt_attend:100,evt_conv:8,evt_comp:63,sp_reach:30,sp_conv:15,sp_comp:65},
+    reengagement: {dig_reach:25,dig_conv:3,dig_ie:15,dig_comp:68,cit_active:20,cit_cohorts:8,cit_size:40,cit_comp:65,pd_spend:100,pd_cpa:70,pd_comp:65,amb_alumni:13994,amb_ref:0.4,amb_conv:40,corp_partners:30,corp_size:60,corp_comp:63,inf_reach:10,inf_conv:0.4,inf_comp:61,evt_attend:80,evt_conv:8,evt_comp:63,sp_reach:30,sp_conv:15,sp_comp:65},
   };
-  const p = presets[name];
-  if(!p) return;
-  Object.entries(p).forEach(([id,val]) => setSlider(id, val));
+  const p=presets[name]; if(!p) return;
+  Object.entries(p).forEach(([id,val]) => setSlider(id,val));
   updateSim();
 }
 
-// ══════════════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════════════
+// ══ INIT ══
 window.addEventListener('DOMContentLoaded', () => {
   buildOverview();
+  buildIEOPanel();
   renderTable();
   buildCities();
   buildSimulator();
+  if(!localStorage.getItem('isha_modal_dismissed')) document.getElementById('welcome-modal').style.display='flex';
 });
+function closeModal() { document.getElementById('welcome-modal').style.display='none'; localStorage.setItem('isha_modal_dismissed','1'); }
+function reopenModal() { document.getElementById('welcome-modal').style.display='flex'; }
+document.addEventListener('click', e => { if(e.target.id==='welcome-modal') closeModal(); });
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
 </script>
+
+<!-- WELCOME MODAL -->
+<div id="welcome-modal" style="display:none;position:fixed;inset:0;background:rgba(15,20,30,0.72);z-index:1000;align-items:center;justify-content:center;padding:1.5rem;">
+  <div style="background:#fff;border-radius:16px;max-width:700px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,0.25);">
+    <div style="background:#1F2937;border-radius:16px 16px 0 0;padding:1.75rem 2rem 1.5rem;position:relative;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><div style="width:10px;height:10px;border-radius:50%;background:#C9A24B;flex-shrink:0;"></div><span style="color:rgba(255,255,255,0.6);font-size:12px;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">Internal strategy tool · Isha Foundation NA</span></div>
+      <h1 style="color:#fff;font-size:20px;font-weight:700;margin-bottom:6px;">IE 500K Scale-Up Dashboard</h1>
+      <p style="color:rgba(255,255,255,0.65);font-size:13px;line-height:1.6;">A data and simulation tool to support Isha Foundation's goal of bringing Inner Engineering to 500,000 people across North America.</p>
+      <button onclick="closeModal()" aria-label="Close" style="position:absolute;top:1.25rem;right:1.25rem;background:rgba(255,255,255,0.12);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;">×</button>
+    </div>
+    <div style="padding:1.75rem 2rem;">
+      <div style="margin-bottom:1.5rem;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#888;margin-bottom:10px;">What's inside</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div style="background:#f5f3ef;border-radius:8px;padding:10px 12px;"><div style="font-weight:600;font-size:12.5px;color:#1F2937;margin-bottom:3px;">📊 IEO live data</div><div style="font-size:12px;color:#555;">Real enrollment, completion rate (61.2%), step funnel, and city leaderboard from the IEO tracker.</div></div>
+          <div style="background:#f5f3ef;border-radius:8px;padding:10px 12px;"><div style="font-weight:600;font-size:12.5px;color:#1F2937;margin-bottom:3px;">📍 In-person programs</div><div style="font-size:12px;color:#555;">Live program data from all 60 NA city pages, including real venues and dates.</div></div>
+          <div style="background:#f5f3ef;border-radius:8px;padding:10px 12px;"><div style="font-weight:600;font-size:12.5px;color:#1F2937;margin-bottom:3px;">🎯 500K simulator</div><div style="font-size:12px;color:#555;">Tune 15 channels with sliders. Defaults recalibrated to real 61.2% completion rate.</div></div>
+          <div style="background:#f5f3ef;border-radius:8px;padding:10px 12px;"><div style="font-weight:600;font-size:12.5px;color:#1F2937;margin-bottom:3px;">💡 Insights</div><div style="font-size:12px;color:#555;">Gap analysis combining IEO online data with in-person scheduling gaps.</div></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:1.5rem;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#888;margin-bottom:10px;">Key assumptions — simulator</div>
+        <ul style="padding-left:1.25rem;font-size:12.5px;color:#444;line-height:2;">
+          <li><strong>Completion rate (61.2% default):</strong> Set to the real IEO completion rate from the Isha leaderboard tracker (Apr 20, 2026 snapshot). Previously assumed at 70% — the actual rate is 8.8 points lower.</li>
+          <li><strong>Expired re-engagement (ambassador channel):</strong> 13,994 students expired without completing. The ambassador slider models re-engaging a portion of this pool at a 40% re-activation rate (conservative).</li>
+          <li><strong>City cohort size (30 people default):</strong> Estimated from observable in-person event formats at active Isha city centers. Actual capacity varies by venue and city.</li>
+          <li><strong>Digital reach → trial conversion (2% default):</strong> Conservative estimate based on wellness program benchmarks. Sadhguru's strong brand may yield higher rates.</li>
+          <li><strong>Corporate enrollment (50 per partnership):</strong> Ranges from 10 for a small startup to 500+ for a Fortune 500. Tune per your actual pipeline.</li>
+          <li><strong>Channel volumes are additive:</strong> The model assumes minimal overlap. In practice, actual unique completions may be 10–15% lower than the sum of all channels.</li>
+          <li><strong>Completion rate improvement:</strong> Each 1-point lift in the 61.2% rate (e.g. via Step 4 nudge campaigns) adds ~544 completions per 54K cohort enrolled — a high-leverage, low-cost lever.</li>
+        </ul>
+      </div>
+
+      <div style="background:#fef9f0;border:1px solid #f0d9a8;border-radius:8px;padding:14px 16px;margin-bottom:1.5rem;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#9a6c1a;margin-bottom:6px;">Data disclaimer</div>
+        <p style="font-size:12.5px;color:#5a3e0c;line-height:1.7;">In-person program data was collected from publicly available pages on <strong>innerengineering.com</strong> as of <strong>June 22, 2026</strong>. IEO online tracker data is from <strong>ieo-leaderboard.vercel.app</strong> as of <strong>Apr 20, 2026</strong>. Both represent point-in-time snapshots. This tool is not affiliated with or endorsed by Isha Foundation. For current program information, always refer to the official Isha program finder.</p>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#666;cursor:pointer;">
+          <input type="checkbox" id="dont-show" onchange="if(this.checked){localStorage.setItem('isha_modal_dismissed','1')}else{localStorage.removeItem('isha_modal_dismissed')}" style="width:14px;height:14px;">
+          Don't show this again
+        </label>
+        <div style="display:flex;gap:8px;">
+          <a href="https://ieo-leaderboard.vercel.app/ieo-progress?group=all" target="_blank" style="padding:8px 16px;border-radius:7px;border:0.5px solid #ccc;background:#fff;color:#333;font-size:13px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;"><i class="ti ti-external-link" style="font-size:14px;"></i> IEO Live Tracker</a>
+          <a href="https://isha.sadhguru.org/us/en/program-finder-us" target="_blank" style="padding:8px 16px;border-radius:7px;border:0.5px solid #ccc;background:#fff;color:#333;font-size:13px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;"><i class="ti ti-external-link" style="font-size:14px;"></i> Isha Program Finder</a>
+          <button onclick="closeModal()" style="padding:8px 22px;border-radius:7px;border:none;background:#1F2937;color:#fff;font-size:13px;font-weight:600;cursor:pointer;">Enter dashboard →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="modal-trigger" onclick="reopenModal()"><i class="ti ti-info-circle" style="font-size:14px;"></i> About this dashboard</button>
 </body>
 </html>
