@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Isha Foundation — 500K IE Scale-Up Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #1F2937; --gold: #C9A24B; --teal: #2D6A68; --red: #B5524A;
+    --green: #3A6B43; --bg: #f5f3ef; --card: #ffffff; --border: rgba(0,0,0,0.1);
+    --text: #1a1a1a; --text2: #555; --text3: #888;
+    --ie: #2563eb; --hy: #16a34a; --free: #d97706; --none: #9ca3af;
+    --camp: #7c3aed;
+  }
+  body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; }
+
+  /* NAV */
+  .nav { background: var(--navy); color: #fff; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; }
+  .nav-brand { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; }
+  .nav-brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+  .nav-tabs { display: flex; gap: 4px; }
+  .nav-tab { padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; color: rgba(255,255,255,0.7); border: none; background: none; transition: all 0.15s; }
+  .nav-tab:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .nav-tab.active { background: rgba(255,255,255,0.15); color: #fff; }
+  .badge { background: var(--gold); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 4px; font-weight: 600; }
+
+  /* MAIN PANELS */
+  .panel { display: none; padding: 1.5rem 2rem; max-width: 1400px; margin: 0 auto; }
+  .panel.active { display: block; }
+
+  /* HERO */
+  .hero { background: linear-gradient(135deg, var(--navy) 0%, #374151 100%); color: #fff; padding: 2rem; border-radius: 12px; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+  .hero h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .hero p { color: rgba(255,255,255,0.7); font-size: 13px; }
+  .hero-stats { display: flex; gap: 2rem; }
+  .hero-stat { text-align: center; }
+  .hero-stat .n { font-size: 28px; font-weight: 700; color: var(--gold); }
+  .hero-stat .l { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+
+  /* CARDS / GRID */
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.5rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 1.5rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 1.5rem; }
+  .card { background: var(--card); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.25rem; }
+  .card-title { font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; font-weight: 600; }
+  .metric-n { font-size: 26px; font-weight: 700; color: var(--text); line-height: 1; }
+  .metric-sub { font-size: 12px; color: var(--text3); margin-top: 4px; }
+  .metric-delta { font-size: 11px; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 4px; }
+  .delta-up { background: #dcfce7; color: #166534; }
+  .delta-gap { background: #fee2e2; color: #991b1b; }
+
+  /* SECTION TITLES */
+  .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1rem; }
+  .section-title { font-size: 16px; font-weight: 600; color: var(--text); }
+  .section-sub { font-size: 12px; color: var(--text3); }
+
+  /* PROGRAM TABLE */
+  .table-wrap { background: var(--card); border: 0.5px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; }
+  .table-toolbar { padding: 12px 16px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .table-toolbar input, .table-toolbar select { padding: 6px 10px; border: 0.5px solid var(--border); border-radius: 6px; font-size: 13px; background: var(--bg); color: var(--text); min-width: 140px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th { padding: 8px 12px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text3); background: #f9f8f6; border-bottom: 0.5px solid var(--border); text-transform: uppercase; letter-spacing: 0.04em; cursor: pointer; white-space: nowrap; }
+  th:hover { color: var(--text); }
+  td { padding: 8px 12px; border-bottom: 0.5px solid var(--border); color: var(--text); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafaf8; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 500; }
+  .tag-ie { background: #dbeafe; color: #1e40af; }
+  .tag-hy { background: #dcfce7; color: #166534; }
+  .tag-free { background: #fef9c3; color: #854d0e; }
+  .tag-none { background: #f3f4f6; color: #6b7280; }
+  .tag-camp { background: #ede9fe; color: #5b21b6; }
+  .tag-adv { background: #fce7f3; color: #9d174d; }
+
+  /* MAP GRID */
+  .city-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; margin-bottom: 1.5rem; }
+  .city-card { background: var(--card); border: 0.5px solid var(--border); border-radius: 8px; padding: 10px 12px; cursor: pointer; transition: all 0.15s; }
+  .city-card:hover { border-color: var(--navy); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .city-card.active-city { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(201,162,75,0.3); }
+  .city-name { font-weight: 600; font-size: 13px; color: var(--text); }
+  .city-state { font-size: 11px; color: var(--text3); }
+  .city-programs { margin-top: 6px; display: flex; gap: 4px; flex-wrap: wrap; }
+  .city-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-ie { background: var(--ie); }
+  .dot-hy { background: var(--green); }
+  .dot-free { background: var(--free); }
+  .city-count { font-size: 11px; color: var(--text3); margin-top: 4px; }
+  .city-zero { opacity: 0.5; }
+
+  /* SIMULATOR */
+  .sim-wrap { background: var(--card); border: 0.5px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; }
+  .sim-header { background: var(--navy); color: #fff; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; }
+  .sim-header h2 { font-size: 15px; font-weight: 600; }
+  .sim-body { padding: 1.25rem; }
+  .sim-target { display: flex; align-items: center; gap: 16px; margin-bottom: 1.5rem; padding: 14px 16px; background: #f9f8f6; border-radius: 8px; }
+  .sim-target label { font-size: 13px; font-weight: 600; min-width: 140px; }
+  .sim-target input[type=range] { flex: 1; }
+  .sim-target .val { font-size: 18px; font-weight: 700; color: var(--navy); min-width: 80px; text-align: right; }
+  .channels-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
+  .channel-row { background: #f9f8f6; border-radius: 8px; padding: 12px 14px; }
+  .channel-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .channel-name { font-size: 12.5px; font-weight: 600; color: var(--text); }
+  .channel-num { font-size: 18px; font-weight: 700; color: var(--navy); }
+  .channel-num small { font-size: 11px; font-weight: 400; color: var(--text3); }
+  .channel-sliders { display: flex; flex-direction: column; gap: 6px; }
+  .slider-row { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text2); }
+  .slider-row span { min-width: 130px; }
+  .slider-row input[type=range] { flex: 1; }
+  .slider-val { min-width: 42px; text-align: right; font-weight: 500; color: var(--text); }
+  .sim-results { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.25rem; }
+  .sim-result-card { border-radius: 8px; padding: 14px; text-align: center; }
+  .sim-result-card .n { font-size: 22px; font-weight: 700; }
+  .sim-result-card .l { font-size: 11px; margin-top: 2px; opacity: 0.8; }
+  .progress-bar-wrap { margin-bottom: 1.5rem; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text2); margin-bottom: 6px; }
+  .progress-bar { height: 12px; background: #e5e7eb; border-radius: 6px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 6px; transition: width 0.4s ease; }
+  .channel-bars { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1rem; }
+  .ch-bar-row { display: flex; align-items: center; gap: 10px; font-size: 11.5px; }
+  .ch-bar-label { min-width: 220px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ch-bar-track { flex: 1; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; }
+  .ch-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+  .ch-bar-val { min-width: 70px; text-align: right; font-weight: 600; color: var(--text); }
+
+  /* INSIGHTS */
+  .insight { background: var(--card); border-left: 3px solid var(--gold); padding: 12px 16px; border-radius: 0 8px 8px 0; margin-bottom: 10px; }
+  .insight.gap { border-left-color: var(--red); }
+  .insight.opp { border-left-color: var(--teal); }
+  .insight-title { font-weight: 600; font-size: 13px; margin-bottom: 3px; }
+  .insight-body { font-size: 12.5px; color: var(--text2); }
+
+  /* BUTTONS */
+  .btn { padding: 7px 14px; border-radius: 6px; border: 0.5px solid var(--border); background: var(--card); color: var(--text); font-size: 12.5px; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
+  .btn:hover { background: #f3f4f6; border-color: #9ca3af; }
+  .btn-primary { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .btn-primary:hover { background: #374151; }
+  .btn-gold { background: var(--gold); color: #fff; border-color: var(--gold); }
+  .btn-gold:hover { background: #b8922f; }
+
+  /* MISC */
+  .divider { border: none; border-top: 0.5px solid var(--border); margin: 1.5rem 0; }
+  .page-count { font-size: 12px; color: var(--text3); }
+  #map-tooltip { position: fixed; background: rgba(0,0,0,0.85); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 12px; pointer-events: none; display: none; z-index: 999; }
+
+  @media (max-width: 900px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .channels-grid { grid-template-columns: 1fr; }
+    .sim-results { grid-template-columns: repeat(2, 1fr); }
+    .panel { padding: 1rem; }
+    .hero { flex-direction: column; gap: 1rem; }
+    .hero-stats { gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="dot"></div>
+    Isha Foundation — IE 500K Dashboard
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPanel('overview')"><i class="ti ti-dashboard"></i> Overview</button>
+    <button class="nav-tab" onclick="showPanel('programs')"><i class="ti ti-list"></i> Programs <span class="badge" id="prog-badge">—</span></button>
+    <button class="nav-tab" onclick="showPanel('cities')"><i class="ti ti-map-pin"></i> Cities</button>
+    <button class="nav-tab" onclick="showPanel('simulator')"><i class="ti ti-adjustments"></i> Simulator</button>
+    <button class="nav-tab" onclick="showPanel('insights')"><i class="ti ti-bulb"></i> Insights</button>
+  </div>
+</nav>
+
+<div id="map-tooltip"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PANEL 1: OVERVIEW                                  -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="panel active" id="panel-overview">
+
+  <div class="hero">
+    <div>
+      <h1>North America IE Scale-Up Command Center</h1>
+      <p>Live program data — June 22, 2026 · 60 cities tracked · 500K IE target</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="n" id="h-total-programs">—</div><div class="l">Programs scheduled</div></div>
+      <div class="hero-stat"><div class="n" id="h-active-cities">—</div><div class="l">Active cities</div></div>
+      <div class="hero-stat"><div class="n" id="h-dormant">—</div><div class="l">Dormant cities</div></div>
+      <div class="hero-stat"><div class="n">500K</div><div class="l">Annual IE target</div></div>
+    </div>
+  </div>
+
+  <div class="grid-4">
+    <div class="card">
+      <div class="card-title">IE in-person programs</div>
+      <div class="metric-n" id="ov-ie">—</div>
+      <div class="metric-sub">Across <span id="ov-ie-cities">—</span> cities</div>
+      <span class="metric-delta delta-gap" id="ov-ie-gap">—</span>
+    </div>
+    <div class="card">
+      <div class="card-title">Hatha yoga programs</div>
+      <div class="metric-n" id="ov-hy">—</div>
+      <div class="metric-sub">Across <span id="ov-hy-cities">—</span> cities</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Free intro events</div>
+      <div class="metric-n" id="ov-free">—</div>
+      <div class="metric-sub">Across <span id="ov-free-cities">—</span> cities</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Cities with zero programs</div>
+      <div class="metric-n" id="ov-zero">—</div>
+      <div class="metric-sub" id="ov-zero-pct">—</div>
+      <span class="metric-delta delta-gap">Critical gap</span>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="section-header">
+        <div class="section-title">Programs by type</div>
+      </div>
+      <div style="position:relative;height:200px;"><canvas id="chart-type" role="img" aria-label="Programs by type breakdown">IE In-Person, Hatha Yoga, Free Events breakdown.</canvas></div>
+      <div id="chart-type-legend" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;font-size:12px;color:var(--text2);"></div>
+    </div>
+    <div class="card">
+      <div class="section-header">
+        <div class="section-title">Programs by city (top 12)</div>
+      </div>
+      <div style="position:relative;height:200px;"><canvas id="chart-city" role="img" aria-label="Top cities by program count">Top cities by number of scheduled programs.</canvas></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:1.5rem;">
+    <div class="section-header">
+      <div class="section-title">Monthly distribution of programs</div>
+      <div class="section-sub">All cities · 2026</div>
+    </div>
+    <div style="position:relative;height:180px;"><canvas id="chart-monthly" role="img" aria-label="Programs by month">Programs scheduled per month in 2026.</canvas></div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:0">
+    <div class="card">
+      <div class="section-title" style="margin-bottom:12px">Country breakdown</div>
+      <div style="position:relative;height:160px;"><canvas id="chart-country" role="img" aria-label="USA vs Canada programs">Programs split between USA and Canada.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="section-title" style="margin-bottom:12px">City activation rate</div>
+      <div style="margin-bottom:8px;">
+        <div class="progress-label"><span>Cities with any program</span><span id="active-pct">—</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="active-bar" style="background:#2563eb;width:0%"></div></div>
+      </div>
+      <div style="margin-bottom:8px;">
+        <div class="progress-label"><span>Cities with IE scheduled</span><span id="ie-pct">—</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="ie-bar" style="background:#16a34a;width:0%"></div></div>
+      </div>
+      <div>
+        <div class="progress-label"><span>Cities with Hatha Yoga</span><span id="hy-pct">—</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="hy-bar" style="background:#d97706;width:0%"></div></div>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text2);">
+        <i class="ti ti-info-circle" style="font-size:13px;vertical-align:-2px;margin-right:4px;"></i>
+        Activating all 60 cities is the single biggest lever toward 500K
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PANEL 2: PROGRAMS TABLE                            -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="panel" id="panel-programs">
+  <div class="section-header">
+    <div class="section-title">All program listings</div>
+    <span class="page-count" id="prog-count">Loading…</span>
+  </div>
+  <div class="table-wrap">
+    <div class="table-toolbar">
+      <input type="text" id="search-input" placeholder="Search city, venue, program…" oninput="renderTable()">
+      <select id="filter-type" onchange="renderTable()">
+        <option value="">All types</option>
+        <option value="Inner Engineering In-Person">IE In-Person</option>
+        <option value="Hatha Yoga">Hatha Yoga</option>
+        <option value="Free Event/Intro">Free Events</option>
+        <option value="Advanced">Advanced</option>
+      </select>
+      <select id="filter-country" onchange="renderTable()">
+        <option value="">USA + Canada</option>
+        <option value="USA">USA only</option>
+        <option value="Canada">Canada only</option>
+      </select>
+      <select id="filter-status" onchange="renderTable()">
+        <option value="">All statuses</option>
+        <option value="✅ Live Data">Has programs</option>
+        <option value="⬜ No programs currently scheduled">No programs</option>
+      </select>
+      <button class="btn" onclick="resetFilters()"><i class="ti ti-refresh"></i> Reset</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th onclick="sortTable('city')">City <i class="ti ti-arrows-sort" style="font-size:10px;"></i></th>
+            <th onclick="sortTable('state')">State</th>
+            <th onclick="sortTable('country')">Country</th>
+            <th onclick="sortTable('centerType')">Type</th>
+            <th onclick="sortTable('programName')">Program</th>
+            <th onclick="sortTable('programType')">Category</th>
+            <th onclick="sortTable('startDate')">Start</th>
+            <th onclick="sortTable('endDate')">End</th>
+            <th onclick="sortTable('venueName')">Venue</th>
+            <th>Address</th>
+          </tr>
+        </thead>
+        <tbody id="program-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PANEL 3: CITIES                                    -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="panel" id="panel-cities">
+  <div class="section-header">
+    <div class="section-title">All 60 North America cities</div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn" onclick="filterCities('all')">All</button>
+      <button class="btn" onclick="filterCities('active')"><span class="city-dot dot-ie" style="display:inline-block;margin-right:4px;"></span>Active</button>
+      <button class="btn" onclick="filterCities('zero')"><span class="city-dot" style="display:inline-block;margin-right:4px;background:#9ca3af;"></span>No programs</button>
+      <button class="btn" onclick="filterCities('canada')">Canada</button>
+    </div>
+  </div>
+  <div class="city-grid" id="city-grid"></div>
+  <div class="card" id="city-detail" style="display:none;">
+    <div class="section-title" id="cd-title" style="margin-bottom:12px;"></div>
+    <table style="width:100%;font-size:12.5px;">
+      <thead><tr>
+        <th style="background:#f9f8f6;padding:6px 10px;text-align:left;font-size:11px;color:var(--text3);font-weight:600;">Program</th>
+        <th style="background:#f9f8f6;padding:6px 10px;text-align:left;font-size:11px;color:var(--text3);font-weight:600;">Dates</th>
+        <th style="background:#f9f8f6;padding:6px 10px;text-align:left;font-size:11px;color:var(--text3);font-weight:600;">Venue</th>
+        <th style="background:#f9f8f6;padding:6px 10px;text-align:left;font-size:11px;color:var(--text3);font-weight:600;">Type</th>
+      </tr></thead>
+      <tbody id="cd-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PANEL 4: SIMULATOR                                 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="panel" id="panel-simulator">
+  <div class="sim-wrap">
+    <div class="sim-header">
+      <h2><i class="ti ti-adjustments" style="font-size:16px;margin-right:8px;"></i>IE 500K Scale-Up Simulator</h2>
+      <button class="btn" style="background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.3);" onclick="resetSim()"><i class="ti ti-refresh"></i> Reset</button>
+    </div>
+    <div class="sim-body">
+
+      <div class="sim-target">
+        <label><i class="ti ti-target" style="margin-right:6px;"></i>Annual IE target</label>
+        <input type="range" min="100000" max="1000000" step="50000" value="500000" id="target-slider" oninput="updateSim()">
+        <div class="val" id="target-val">500,000</div>
+      </div>
+
+      <div class="sim-results" id="sim-results">
+        <div class="sim-result-card" style="background:#dbeafe;color:#1e40af;">
+          <div class="n" id="sr-total">0</div><div class="l">Total projected</div>
+        </div>
+        <div class="sim-result-card" style="background:#dcfce7;color:#166534;">
+          <div class="n" id="sr-pct">0%</div><div class="l">% of target reached</div>
+        </div>
+        <div class="sim-result-card" style="background:#fef9c3;color:#854d0e;">
+          <div class="n" id="sr-gap">500K</div><div class="l">Remaining gap</div>
+        </div>
+        <div class="sim-result-card" style="background:#ede9fe;color:#5b21b6;">
+          <div class="n" id="sr-channels">0</div><div class="l">Active channels</div>
+        </div>
+      </div>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-label">
+          <span style="font-weight:600;">Progress to target</span>
+          <span id="prog-to-target">0 / 500,000</span>
+        </div>
+        <div class="progress-bar" style="height:18px;">
+          <div class="progress-fill" id="main-progress" style="background:linear-gradient(90deg,#2563eb,#1d4ed8);width:0%;"></div>
+        </div>
+      </div>
+
+      <div class="section-header" style="margin-bottom:10px;">
+        <div class="section-title">Adjust each channel</div>
+        <div class="section-sub">Tune reach and conversion to model different scenarios</div>
+      </div>
+
+      <div class="channels-grid" id="channels-grid"></div>
+
+      <div class="section-header" style="margin-top:0.5rem;margin-bottom:10px;">
+        <div class="section-title">Channel contribution breakdown</div>
+      </div>
+      <div class="channel-bars" id="channel-bars"></div>
+
+      <div style="position:relative;height:280px;margin-top:1rem;">
+        <canvas id="sim-chart" role="img" aria-label="Simulator bar chart showing contribution per channel">Contributions by channel from the simulator settings.</canvas>
+      </div>
+
+      <hr class="divider">
+      <div class="section-title" style="margin-bottom:10px;">Quick scenario presets</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn" onclick="loadScenario('conservative')"><i class="ti ti-chart-line"></i> Conservative (digital-heavy)</button>
+        <button class="btn" onclick="loadScenario('balanced')"><i class="ti ti-adjustments"></i> Balanced (all channels)</button>
+        <button class="btn btn-gold" onclick="loadScenario('aggressive')"><i class="ti ti-rocket"></i> Aggressive (full activation)</button>
+        <button class="btn" onclick="loadScenario('cities')"><i class="ti ti-map-pin"></i> City center focus</button>
+        <button class="btn" onclick="loadScenario('corporate')"><i class="ti ti-building"></i> Corporate-led</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PANEL 5: INSIGHTS                                  -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="panel" id="panel-insights">
+  <div class="section-title" style="margin-bottom:1rem;">Strategic insights & gap analysis</div>
+
+  <div class="grid-2" style="margin-bottom:1rem;">
+    <div>
+      <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Critical gaps</div>
+      <div class="insight gap">
+        <div class="insight-title">47 of 60 cities have zero programs scheduled</div>
+        <div class="insight-body">Only 13 cities are currently active. Activating the dormant 47 with even 1 IE cohort/month each would add tens of thousands of completions annually.</div>
+      </div>
+      <div class="insight gap">
+        <div class="insight-title">Entire US West Coast is dark</div>
+        <div class="insight-body">San Francisco, San Diego, Portland, Sacramento, Orange County — all have zero programs. Combined metro population: ~20M. Largest unserved market in NA.</div>
+      </div>
+      <div class="insight gap">
+        <div class="insight-title">11 Midwest cities with zero IE or Hatha Yoga</div>
+        <div class="insight-body">Chicago, Columbus, Indianapolis, Milwaukee, Detroit, Cleveland, Dayton, Cincinnati, St. Louis, Kansas City, Minneapolis — all dormant despite active city centers.</div>
+      </div>
+      <div class="insight gap">
+        <div class="insight-title">Nashville: 45 min from Isha Institute TN — zero programs</div>
+        <div class="insight-body">The city closest to Isha's flagship US campus has no scheduled programs. Extraordinary gap given proximity to teachers, materials, and support infrastructure.</div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Opportunities</div>
+      <div class="insight opp">
+        <div class="insight-title">Toronto model: replicate in 10 major metros</div>
+        <div class="insight-body">Toronto runs 3 IE programs + 12 Hatha Yoga across 6 sub-cities with a single coordination hub. This model applied to Chicago, SF, Houston, DC, and LA could add 50K+ annually.</div>
+      </div>
+      <div class="insight opp">
+        <div class="insight-title">Philadelphia is the most programmatically rich US city</div>
+        <div class="insight-body">9 scheduled programs at a single recurring venue (Exton Hotel). This proves sustained multi-format city programming is operationally achievable in the US.</div>
+      </div>
+      <div class="insight opp">
+        <div class="insight-title">Corporate B2B: largest untapped multiplier</div>
+        <div class="insight-body">Chicago, NYC, SF, Houston, Dallas, DC — massive corporate markets with zero active programs. One Work Beyond Stress contract with a Fortune 500 = hundreds of IE participants, employer-subsidized.</div>
+      </div>
+      <div class="insight opp">
+        <div class="insight-title">Canada: Toronto + Vancouver prove the model works</div>
+        <div class="insight-body">Both are highly active with multi-format calendars. Calgary, Montreal, Edmonton, Ottawa, and Regina have zero programs — ready for the same playbook.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title" style="margin-bottom:12px;">Channel-by-channel path to 500K</div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Channel</th>
+            <th>Current state</th>
+            <th>Realistic annual volume</th>
+            <th>Key activation lever</th>
+            <th>Priority</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><b>Digital / App-Led Online IE</b></td><td>Running — not at scale</td><td>150,000–200,000</td><td>Paid digital campaigns; scale Miracle of Mind app downloads</td><td><span class="tag tag-ie">Highest</span></td></tr>
+          <tr><td><b>Local City Center Network</b></td><td>13 of 60 active</td><td>50,000–100,000</td><td>Activate all 47 dormant cities with monthly IE cohorts</td><td><span class="tag tag-ie">High</span></td></tr>
+          <tr><td><b>Paid Digital / Media</b></td><td>Exists — not maximized</td><td>50,000–100,000</td><td>YouTube, Meta, Google Ads; content campaigns</td><td><span class="tag tag-ie">High</span></td></tr>
+          <tr><td><b>Ambassadors & Ecosystem Referrals</b></td><td>Informal only</td><td>30,000–60,000</td><td>Formal ambassador program for IE graduates</td><td><span class="tag tag-hy">High</span></td></tr>
+          <tr><td><b>Corporate / Medical / Educational</b></td><td>Work Beyond Stress exists; B2B minimal</td><td>30,000–80,000</td><td>B2B partnerships; corporate wellness contracts</td><td><span class="tag tag-hy">High</span></td></tr>
+          <tr><td><b>Free Top-of-Funnel</b></td><td>Active in some cities</td><td>Drives 20–30% of above</td><td>Run free events in all 60 cities; IDY June 21</td><td><span class="tag tag-hy">High</span></td></tr>
+          <tr><td><b>Influencer Network</b></td><td>Ad hoc</td><td>20,000–40,000</td><td>Structured influencer program; podcasts; YouTube collab</td><td><span class="tag tag-free">Medium</span></td></tr>
+          <tr><td><b>Events & Partnerships</b></td><td>Annual mega-events</td><td>15,000–30,000</td><td>Post-Mahashivratri + post-Guru Purnima enrollment push</td><td><span class="tag tag-free">Medium</span></td></tr>
+          <tr><td><b>Books & Isha Life Products</b></td><td>Active</td><td>10,000–20,000</td><td>Product buyers → IE enrollment CTA</td><td><span class="tag tag-free">Medium</span></td></tr>
+          <tr><td><b>Special Groups (Veterans/Students/Seniors)</b></td><td>Veteran access active</td><td>10,000–25,000</td><td>Expand all access tracks; scholarship fund campaign</td><td><span class="tag tag-free">Medium</span></td></tr>
+          <tr><td><b>Alumni / Advanced Practitioners</b></td><td>Informal referrals only</td><td>15,000–30,000</td><td>Structured alumni referral program with tracking</td><td><span class="tag tag-hy">High</span></td></tr>
+          <tr><td><b>Scholarship / Donor-Funded</b></td><td>Exists — small scale</td><td>5,000–15,000</td><td>Giving Tuesday + year-end fundraising campaign</td><td><span class="tag tag-free">Medium</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+
+// ══════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════
+const PROGRAMS = [
+  {city:"Isha Institute of Inner-Sciences",state:"TN",country:"USA",centerType:"Flagship Campus",programName:"Inner Engineering Retreat (4-day residential)",programCategory:"Beginner",programType:"Inner Engineering In-Person",startDate:"Year-round",endDate:"Year-round",venueName:"Isha Institute of Inner-Sciences",address:"951 Isha Lane, McMinnville, TN 37110",status:"✅ Live Data"},
+  {city:"Isha Institute of Inner-Sciences",state:"TN",country:"USA",centerType:"Flagship Campus",programName:"Hatha Yoga Programs (Angamardana, Surya Kriya, Yogasanas)",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Year-round",endDate:"Year-round",venueName:"Isha Institute of Inner-Sciences",address:"951 Isha Lane, McMinnville, TN 37110",status:"✅ Live Data"},
+  {city:"Isha Institute of Inner-Sciences",state:"TN",country:"USA",centerType:"Flagship Campus",programName:"Bhava Spandana Program (Advanced residential)",programCategory:"Advanced",programType:"Advanced",startDate:"Year-round",endDate:"Year-round",venueName:"Mahima Hall",address:"951 Isha Lane, McMinnville, TN 37110",status:"✅ Live Data"},
+  {city:"Isha Institute of Inner-Sciences",state:"TN",country:"USA",centerType:"Flagship Campus",programName:"Samyama (8-day silent retreat)",programCategory:"Advanced",programType:"Advanced",startDate:"Periodic",endDate:"Periodic",venueName:"Mahima Hall",address:"951 Isha Lane, McMinnville, TN 37110",status:"✅ Live Data"},
+  {city:"Isha Institute of Inner-Sciences",state:"TN",country:"USA",centerType:"Flagship Campus",programName:"Daily: Guru Pooja, Aumkar, Yoga Namaskar (Free day visit)",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Daily",endDate:"Daily",venueName:"Adiyogi: Abode of Yoga",address:"951 Isha Lane, McMinnville, TN 37110",status:"✅ Live Data"},
+  {city:"Isha Yoga Center LA",state:"CA",country:"USA",centerType:"Flagship Campus",programName:"Inner Engineering In-Person Programs",programCategory:"Beginner",programType:"Inner Engineering In-Person",startDate:"Year-round",endDate:"Year-round",venueName:"Isha Yoga Center LA",address:"7045 Farralone Ave, Canoga Park, CA 91303",status:"✅ Live Data"},
+  {city:"Isha Yoga Center LA",state:"CA",country:"USA",centerType:"Flagship Campus",programName:"Hatha Yoga Programs (multiple formats)",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Year-round",endDate:"Year-round",venueName:"Isha Yoga Center LA",address:"7045 Farralone Ave, Canoga Park, CA 91303",status:"✅ Live Data"},
+  {city:"Isha Yoga Center LA",state:"CA",country:"USA",centerType:"Flagship Campus",programName:"Advanced Programs (BSP, Shoonya etc.)",programCategory:"Advanced",programType:"Advanced",startDate:"Year-round",endDate:"Year-round",venueName:"Isha Yoga Center LA",address:"7045 Farralone Ave, Canoga Park, CA 91303",status:"✅ Live Data"},
+  {city:"New York",state:"NY",country:"USA",centerType:"City Center",programName:"Introduction to Inner Engineering",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jun 25, 2026",endDate:"Jun 25, 2026",venueName:"Left to Right LLC",address:"15 W 36th St Floor 2, New York, NY 10018",status:"✅ Live Data"},
+  {city:"New York",state:"NY",country:"USA",centerType:"City Center",programName:"Inner Engineering In-Person",programCategory:"Beginner",programType:"Inner Engineering In-Person",startDate:"Jun 25, 2026",endDate:"Jun 28, 2026",venueName:"Left to Right LLC",address:"15 W 36th St Floor 2, New York, NY 10018",status:"✅ Live Data"},
+  {city:"New York",state:"NY",country:"USA",centerType:"City Center",programName:"Angamardana",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jul 11, 2026",endDate:"Jul 12, 2026",venueName:"Left to Right LLC",address:"15 W 36th St Floor 2, New York, NY 10018",status:"✅ Live Data"},
+  {city:"Boston / New England",state:"MA",country:"USA",centerType:"City Center",programName:"Yoga for Mental Wellbeing",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"May 16, 2026",endDate:"May 16, 2026",venueName:"Somerville Central Library",address:"79 Highland Ave, Somerville, MA 02143",status:"✅ Live Data"},
+  {city:"Boston / New England",state:"MA",country:"USA",centerType:"City Center",programName:"Introduction to Inner Engineering",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jun 25, 2026",endDate:"Jun 25, 2026",venueName:"Southie Event Spaces",address:"368 W Broadway, Boston, MA 02127",status:"✅ Live Data"},
+  {city:"Boston / New England",state:"MA",country:"USA",centerType:"City Center",programName:"Inner Engineering In-Person",programCategory:"Beginner",programType:"Inner Engineering In-Person",startDate:"Jun 25, 2026",endDate:"Jun 28, 2026",venueName:"Southie Event Spaces",address:"368 W Broadway, Boston, MA 02127",status:"✅ Live Data"},
+  {city:"Boston / New England",state:"MA",country:"USA",centerType:"City Center",programName:"Isha Hatha Yoga for Children",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jul 17, 2026",endDate:"Jul 19, 2026",venueName:"ITALO AMERICAN EDUCATIONAL CLUB",address:"75 Pleasant St, Wellesley, MA 02482",status:"✅ Live Data"},
+  {city:"Boston / New England",state:"MA",country:"USA",centerType:"City Center",programName:"Surya Kriya",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jul 18, 2026",endDate:"Jul 19, 2026",venueName:"ITALO AMERICAN EDUCATIONAL CLUB",address:"75 Pleasant St, Wellesley, MA 02482",status:"✅ Live Data"},
+  {city:"Boston / New England",state:"MA",country:"USA",centerType:"City Center",programName:"Yogasanas",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Nov 7, 2026",endDate:"Nov 8, 2026",venueName:"ITALO AMERICAN EDUCATIONAL CLUB",address:"75 Pleasant St, Wellesley, MA 02482",status:"✅ Live Data"},
+  {city:"Washington DC",state:"VA",country:"USA",centerType:"City Center",programName:"Yoga for Beginners / Upa Yoga",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jun 28, 2026",endDate:"Jun 28, 2026",venueName:"Ashburn Library",address:"43316 Hay Rd, Ashburn, VA 20147",status:"✅ Live Data"},
+  {city:"Washington DC",state:"VA",country:"USA",centerType:"City Center",programName:"Intro to IE with Meditation",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jul 5, 2026",endDate:"Jul 5, 2026",venueName:"Brambleton Library",address:"22850 Brambleton Plaza, Brambleton, VA 20148",status:"✅ Live Data"},
+  {city:"Washington DC",state:"VA",country:"USA",centerType:"City Center",programName:"Intro to IE with Meditation",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jul 12, 2026",endDate:"Jul 12, 2026",venueName:"Cascades Library",address:"21030 Whitfield Pl, Sterling, VA 20165",status:"✅ Live Data"},
+  {city:"Washington DC",state:"VA",country:"USA",centerType:"City Center",programName:"Intro to IE with Meditation",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jul 18, 2026",endDate:"Jul 18, 2026",venueName:"Reston Regional Library",address:"11925 Bowman Towne Dr, Reston, VA 20190",status:"✅ Live Data"},
+  {city:"Washington DC",state:"VA",country:"USA",centerType:"City Center",programName:"Isha Hatha Yoga for Children",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jul 17, 2026",endDate:"Jul 19, 2026",venueName:"University of North America",address:"12750 Fair Lakes Circle 4th Fl, Fairfax, VA 22033",status:"✅ Live Data"},
+  {city:"Washington DC",state:"VA",country:"USA",centerType:"City Center",programName:"Surya Kriya",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jul 18, 2026",endDate:"Jul 19, 2026",venueName:"University of North America",address:"12750 Fair Lakes Circle 4th Fl, Fairfax, VA 22033",status:"✅ Live Data"},
+  {city:"Washington DC",state:"VA",country:"USA",centerType:"City Center",programName:"Introduction to Inner Engineering",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jul 23, 2026",endDate:"Jul 23, 2026",venueName:"University of North America",address:"12750 Fair Lakes Circle 4th Fl, Fairfax, VA 22033",status:"✅ Live Data"},
+  {city:"Washington DC",state:"VA",country:"USA",centerType:"City Center",programName:"Inner Engineering In-Person",programCategory:"Beginner",programType:"Inner Engineering In-Person",startDate:"Jul 23, 2026",endDate:"Jul 26, 2026",venueName:"University of North America",address:"12750 Fair Lakes Circle 4th Fl, Fairfax, VA 22033",status:"✅ Live Data"},
+  {city:"Philadelphia",state:"PA",country:"USA",centerType:"City Center",programName:"Isha Hatha Yoga for Children",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jun 26, 2026",endDate:"Jun 28, 2026",venueName:"Exton Hotel & Conference Center",address:"815 Pottstown Pike, Exton, PA 19341",status:"✅ Live Data"},
+  {city:"Philadelphia",state:"PA",country:"USA",centerType:"City Center",programName:"Surya Kriya",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jun 27, 2026",endDate:"Jun 28, 2026",venueName:"Exton Hotel & Conference Center",address:"815 Pottstown Pike, Exton, PA 19341",status:"✅ Live Data"},
+  {city:"Philadelphia",state:"PA",country:"USA",centerType:"City Center",programName:"Introduction to Inner Engineering",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jul 11, 2026",endDate:"Jul 11, 2026",venueName:"Exton Hotel & Conference Center",address:"815 N Pottstown Pike, Exton, PA 19341",status:"✅ Live Data"},
+  {city:"Philadelphia",state:"PA",country:"USA",centerType:"City Center",programName:"Inner Engineering Afresh (for IE graduates)",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Aug 8, 2026",endDate:"Aug 8, 2026",venueName:"Exton Hotel & Conference Center",address:"815 N Pottstown Pike, Exton, PA 19341",status:"✅ Live Data"},
+  {city:"Philadelphia",state:"PA",country:"USA",centerType:"City Center",programName:"Introduction to Inner Engineering",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Sep 10, 2026",endDate:"Sep 10, 2026",venueName:"Exton Hotel & Conference Center",address:"815 N Pottstown Pike, Exton, PA 19341",status:"✅ Live Data"},
+  {city:"Philadelphia",state:"PA",country:"USA",centerType:"City Center",programName:"Inner Engineering In-Person",programCategory:"Beginner",programType:"Inner Engineering In-Person",startDate:"Sep 10, 2026",endDate:"Sep 13, 2026",venueName:"Exton Hotel & Conference Center",address:"815 N Pottstown Pike, Exton, PA 19341",status:"✅ Live Data"},
+  {city:"Philadelphia",state:"PA",country:"USA",centerType:"City Center",programName:"Angamardana",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Sep 25, 2026",endDate:"Sep 27, 2026",venueName:"Exton Hotel & Conference Center",address:"815 Pottstown Pike, Exton, PA 19341",status:"✅ Live Data"},
+  {city:"Philadelphia",state:"PA",country:"USA",centerType:"City Center",programName:"Surya Kriya",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Sep 26, 2026",endDate:"Sep 27, 2026",venueName:"Exton Hotel & Conference Center",address:"815 Pottstown Pike, Exton, PA 19341",status:"✅ Live Data"},
+  {city:"Philadelphia",state:"PA",country:"USA",centerType:"City Center",programName:"Yogasanas",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Dec 5, 2026",endDate:"Dec 6, 2026",venueName:"Exton Hotel & Conference Center",address:"815 Pottstown Pike, Exton, PA 19341",status:"✅ Live Data"},
+  {city:"Houston",state:"TX",country:"USA",centerType:"City Center",programName:"Introduction to Inner Engineering",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jul 16, 2026",endDate:"Jul 16, 2026",venueName:"India House",address:"8888 W Bellfort St, Houston, TX 77031",status:"✅ Live Data"},
+  {city:"Houston",state:"TX",country:"USA",centerType:"City Center",programName:"Inner Engineering In-Person",programCategory:"Beginner",programType:"Inner Engineering In-Person",startDate:"Jul 16, 2026",endDate:"Jul 19, 2026",venueName:"India House",address:"8888 W Bellfort, Houston, TX 77031",status:"✅ Live Data"},
+  {city:"Dallas",state:"TX",country:"USA",centerType:"City Center",programName:"Yoga for Health (Free)",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jun 27, 2026",endDate:"Jun 27, 2026",venueName:"Flower Mound Public Library",address:"3030 Broadmoor Ln, Flower Mound, TX 75022",status:"✅ Live Data"},
+  {city:"Dallas",state:"TX",country:"USA",centerType:"City Center",programName:"Yoga for Beginners / Upa Yoga (Free)",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jun 27, 2026",endDate:"Jun 27, 2026",venueName:"Andrew Brown Park East Grand Pavilion",address:"364 N Denton Tap Rd, Coppell, TX 75019",status:"✅ Live Data"},
+  {city:"Dallas",state:"TX",country:"USA",centerType:"City Center",programName:"Angamardana",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jul 17, 2026",endDate:"Jul 19, 2026",venueName:"Courtyard by Marriott Carrollton",address:"1201 Raiford Rd, Carrollton, TX 75007",status:"✅ Live Data"},
+  {city:"Dallas",state:"TX",country:"USA",centerType:"City Center",programName:"Surya Kriya",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jul 18, 2026",endDate:"Jul 19, 2026",venueName:"Courtyard by Marriott Carrollton",address:"1201 Raiford Rd, Carrollton, TX 75007",status:"✅ Live Data"},
+  {city:"Dallas",state:"TX",country:"USA",centerType:"City Center",programName:"Introduction to Inner Engineering",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Aug 13, 2026",endDate:"Aug 13, 2026",venueName:"Hilton Garden Inn Allen",address:"705 Central Expy S, Allen, TX 75013",status:"✅ Live Data"},
+  {city:"Dallas",state:"TX",country:"USA",centerType:"City Center",programName:"Inner Engineering In-Person",programCategory:"Beginner",programType:"Inner Engineering In-Person",startDate:"Aug 13, 2026",endDate:"Aug 16, 2026",venueName:"Hilton Garden Inn Allen",address:"705 Central Expy S, Allen, TX 75013",status:"✅ Live Data"},
+  {city:"Austin",state:"TX",country:"USA",centerType:"City Center",programName:"Inner Engineering In-Person",programCategory:"Beginner",programType:"Inner Engineering In-Person",startDate:"Jul 30, 2026",endDate:"Aug 2, 2026",venueName:"Star Hill Ranch",address:"15000 Hamilton Pool Rd, Austin, TX 78738",status:"✅ Live Data"},
+  {city:"Austin",state:"TX",country:"USA",centerType:"City Center",programName:"Yogasanas",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Aug 29, 2026",endDate:"Aug 30, 2026",venueName:"Holiday Inn Express Austin NW",address:"10711 Research Blvd, Austin, TX 78759",status:"✅ Live Data"},
+  {city:"Atlanta",state:"GA",country:"USA",centerType:"City Center",programName:"Yoga for Beginners / Upa Yoga (Free)",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jun 27, 2026",endDate:"Jun 27, 2026",venueName:"Private Residence",address:"9111 Cascade Palmetto Hwy, Palmetto, GA 30268",status:"✅ Live Data"},
+  {city:"Atlanta",state:"GA",country:"USA",centerType:"City Center",programName:"Introduction to IE with Meditation (Free)",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jun 27, 2026",endDate:"Jun 27, 2026",venueName:"Private Residence",address:"1450 Huie Rd, Lake City, GA 30260",status:"✅ Live Data"},
+  {city:"Atlanta",state:"GA",country:"USA",centerType:"City Center",programName:"Yogasanas",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Aug 15, 2026",endDate:"Aug 16, 2026",venueName:"Hilton Atlanta/Marietta Conference Center",address:"500 Powder Springs St, Marietta, GA 30064",status:"✅ Live Data"},
+  {city:"Atlanta",state:"GA",country:"USA",centerType:"City Center",programName:"Introduction to Inner Engineering (Free)",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Aug 27, 2026",endDate:"Aug 27, 2026",venueName:"Gujarati Samaj",address:"5331 Royal Woods Pkwy, Tucker, GA 30084",status:"✅ Live Data"},
+  {city:"Atlanta",state:"GA",country:"USA",centerType:"City Center",programName:"Inner Engineering In-Person",programCategory:"Beginner",programType:"Inner Engineering In-Person",startDate:"Aug 27, 2026",endDate:"Aug 30, 2026",venueName:"Gujarati Samaj",address:"5331 Royal Woods Pkwy, Tucker, GA 30084",status:"✅ Live Data"},
+  {city:"Charlotte",state:"NC",country:"USA",centerType:"City Center",programName:"Yoga for Mental Wellbeing (Free)",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jul 18, 2026",endDate:"Jul 18, 2026",venueName:"Private Location",address:"7015 Carnegie Blvd, Charlotte, NC 28209",status:"✅ Live Data"},
+  {city:"Raleigh",state:"NC",country:"USA",centerType:"City Center",programName:"Surya Kriya",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jul 25, 2026",endDate:"Jul 26, 2026",venueName:"SAM IT Solutions",address:"2511 NC-54 Ste 201, Durham, NC 27713",status:"✅ Live Data"},
+  {city:"Raleigh",state:"NC",country:"USA",centerType:"City Center",programName:"Bhuta Shuddhi",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jul 26, 2026",endDate:"Jul 26, 2026",venueName:"SAM IT Solutions",address:"2511 NC-54 Ste 201, Durham, NC 27713",status:"✅ Live Data"},
+  {city:"Raleigh",state:"NC",country:"USA",centerType:"City Center",programName:"Angamardana",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Sep 19, 2026",endDate:"Sep 20, 2026",venueName:"SAM IT Solutions",address:"2511 NC-54 Suite 201, Durham, NC 27713",status:"✅ Live Data"},
+  {city:"Raleigh",state:"NC",country:"USA",centerType:"City Center",programName:"Yogasanas",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Dec 5, 2026",endDate:"Dec 6, 2026",venueName:"SAM IT Solutions",address:"2511 NC-54 Ste 201, Durham, NC 27713",status:"✅ Live Data"},
+  {city:"Seattle",state:"WA",country:"USA",centerType:"City Center",programName:"Introduction to Inner Engineering (Free)",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jul 22, 2026",endDate:"Jul 22, 2026",venueName:"Fairfield Inn Issaquah",address:"1801 12th Ave NW, Issaquah, WA 98027",status:"✅ Live Data"},
+  {city:"Seattle",state:"WA",country:"USA",centerType:"City Center",programName:"Inner Engineering In-Person",programCategory:"Beginner",programType:"Inner Engineering In-Person",startDate:"Jul 23, 2026",endDate:"Jul 26, 2026",venueName:"Fairfield Inn Issaquah",address:"1801 12th Ave NW, Issaquah, WA 98027",status:"✅ Live Data"},
+  {city:"Phoenix",state:"AZ",country:"USA",centerType:"City Center",programName:"Yoga for Beginners / Upa Yoga (Free)",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jun 27, 2026",endDate:"Jun 27, 2026",venueName:"Chinmaya Mission Phoenix",address:"325 S El Dorado, Mesa, AZ 85202",status:"✅ Live Data"},
+  {city:"Phoenix",state:"AZ",country:"USA",centerType:"City Center",programName:"Bhuta Shuddhi",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jun 26, 2026",endDate:"Jun 26, 2026",venueName:"Chinmaya Mission Phoenix",address:"325 S El Dorado, Mesa, AZ 85202",status:"✅ Live Data"},
+  {city:"Phoenix",state:"AZ",country:"USA",centerType:"City Center",programName:"Isha Hatha Yoga for Children",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jun 26, 2026",endDate:"Jun 28, 2026",venueName:"Chinmaya Mission Phoenix",address:"325 S El Dorado, Mesa, AZ 85202",status:"✅ Live Data"},
+  {city:"Phoenix",state:"AZ",country:"USA",centerType:"City Center",programName:"Surya Kriya",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jun 27, 2026",endDate:"Jun 28, 2026",venueName:"Chinmaya Mission Phoenix",address:"325 S El Dorado, Mesa, AZ 85202",status:"✅ Live Data"},
+  {city:"Minneapolis",state:"MN",country:"USA",centerType:"City Center",programName:"Isha Kriya / Meditation for Beginners (Free)",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jun 27, 2026",endDate:"Jun 27, 2026",venueName:"Private Location",address:"830 Winnetka Ave N, Minneapolis, MN 55427",status:"✅ Live Data"},
+  {city:"San Antonio",state:"TX",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Chicago",state:"IL",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Nashville",state:"TN",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Denver",state:"CO",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"San Diego",state:"CA",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"San Francisco",state:"CA",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Orange County",state:"CA",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Sacramento",state:"CA",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Portland",state:"OR",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Salt Lake City",state:"UT",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Santa Fe",state:"NM",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Bozeman",state:"MT",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Hawaii",state:"HI",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Kansas City",state:"KS/MO",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"St. Louis",state:"MO",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Indianapolis",state:"IN",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Milwaukee",state:"WI",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Detroit",state:"MI",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Cleveland",state:"OH",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Columbus",state:"OH",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Cincinnati",state:"OH",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Dayton",state:"OH",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Pittsburgh",state:"PA",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Richmond",state:"VA",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Rochester",state:"NY",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"New Jersey",state:"NJ",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Maryland",state:"MD",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Connecticut",state:"CT",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Delaware",state:"DE",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Louisville",state:"KY",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Memphis",state:"TN",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Orlando",state:"FL",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Tampa Bay",state:"FL",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"West Palm Beach",state:"FL",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Sarasota",state:"FL",country:"USA",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  // Toronto
+  {city:"Toronto",state:"ON",country:"Canada",centerType:"City Center",programName:"Yogasanas",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"May 30, 2026",endDate:"May 31, 2026",venueName:"Crowne Plaza Kitchener-Waterloo",address:"105 King St East, Kitchener, ON N2G 2K8",status:"✅ Live Data"},
+  {city:"Toronto",state:"ON",country:"Canada",centerType:"City Center",programName:"Jala Neti",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"May 31, 2026",endDate:"May 31, 2026",venueName:"Crowne Plaza Kitchener-Waterloo",address:"105 King St East, Kitchener, ON",status:"✅ Live Data"},
+  {city:"Toronto",state:"ON",country:"Canada",centerType:"City Center",programName:"Yoga for Beginners / Upa Yoga (Free)",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"May 30, 2026",endDate:"May 30, 2026",venueName:"Private Location",address:"695 Riverside Dr, London, ON N6H 2S3",status:"✅ Live Data"},
+  {city:"Toronto",state:"ON",country:"Canada",centerType:"City Center",programName:"Introduction to Inner Engineering (Free)",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jun 4, 2026",endDate:"Jun 4, 2026",venueName:"Polish Combatants' Hall (SPK)",address:"206 Beverley Street, Toronto, ON M5T 1Z3",status:"✅ Live Data"},
+  {city:"Toronto",state:"ON",country:"Canada",centerType:"City Center",programName:"Inner Engineering In-Person",programCategory:"Beginner",programType:"Inner Engineering In-Person",startDate:"Jun 4, 2026",endDate:"Jun 7, 2026",venueName:"Polish Combatants' Hall (SPK)",address:"206 Beverley Street, Toronto, ON M5T 1Z3",status:"✅ Live Data"},
+  {city:"Toronto",state:"ON",country:"Canada",centerType:"City Center",programName:"Angamardana",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jun 19, 2026",endDate:"Jun 21, 2026",venueName:"Polish Combatants' Hall (SPK)",address:"206 Beverley Street, Toronto, ON M5T 1Z3",status:"✅ Live Data"},
+  {city:"Toronto",state:"ON",country:"Canada",centerType:"City Center",programName:"Surya Kriya",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jun 20, 2026",endDate:"Jun 21, 2026",venueName:"Polish Combatants' Hall (SPK)",address:"206 Beverley Street, Toronto, ON M5T 1Z3",status:"✅ Live Data"},
+  {city:"Toronto",state:"ON",country:"Canada",centerType:"City Center",programName:"Isha Hatha Yoga for Children",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jul 24, 2026",endDate:"Jul 26, 2026",venueName:"Brookside Vedic Roots Montessori Academy",address:"5816 Sheppard Ave East, Toronto, ON M1B 4Z6",status:"✅ Live Data"},
+  {city:"Toronto",state:"ON",country:"Canada",centerType:"City Center",programName:"Surya Kriya",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jul 25, 2026",endDate:"Jul 26, 2026",venueName:"Brookside Vedic Roots Montessori Academy",address:"5816 Sheppard Ave East, Toronto, ON M1B 4Z6",status:"✅ Live Data"},
+  {city:"Toronto",state:"ON",country:"Canada",centerType:"City Center",programName:"Inner Engineering In-Person",programCategory:"Beginner",programType:"Inner Engineering In-Person",startDate:"Aug 13, 2026",endDate:"Aug 16, 2026",venueName:"St. Volodymyr Cultural Centre",address:"1280 Dundas Street West, Oakville, ON L6M 4H9",status:"✅ Live Data"},
+  {city:"Toronto",state:"ON",country:"Canada",centerType:"City Center",programName:"Isha Hatha Yoga for Children",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Aug 21, 2026",endDate:"Aug 23, 2026",venueName:"Best Western Plus Toronto Airport",address:"5825 Dixie Road, Mississauga, ON L4W 4V7",status:"✅ Live Data"},
+  {city:"Toronto",state:"ON",country:"Canada",centerType:"City Center",programName:"Surya Kriya",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Aug 22, 2026",endDate:"Aug 23, 2026",venueName:"Best Western Plus Toronto Airport",address:"5825 Dixie Road, Mississauga, ON L4W 4V7",status:"✅ Live Data"},
+  {city:"Toronto",state:"ON",country:"Canada",centerType:"City Center",programName:"Inner Engineering In-Person",programCategory:"Beginner",programType:"Inner Engineering In-Person",startDate:"Sep 3, 2026",endDate:"Sep 6, 2026",venueName:"German Canadian Club",address:"1 Cove Road, London, ON N6J 1H7",status:"✅ Live Data"},
+  {city:"Toronto",state:"ON",country:"Canada",centerType:"City Center",programName:"Angamardana",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Sep 18, 2026",endDate:"Sep 20, 2026",venueName:"Richmond Hill Royal Canadian Legion",address:"233 Centre St E, Richmond Hill, ON L4C 1A7",status:"✅ Live Data"},
+  {city:"Toronto",state:"ON",country:"Canada",centerType:"City Center",programName:"Surya Kriya",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Sep 19, 2026",endDate:"Sep 20, 2026",venueName:"Richmond Hill Royal Canadian Legion",address:"233 Centre St E, Richmond Hill, ON L4C 1A7",status:"✅ Live Data"},
+  // Vancouver
+  {city:"Vancouver",state:"BC",country:"Canada",centerType:"City Center",programName:"Yoga for Beginners / Upa Yoga (Free)",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jul 5, 2026",endDate:"Jul 5, 2026",venueName:"Coquitlam City Centre Library",address:"1169 Pinetree Way, Coquitlam, BC V3B 0Y1",status:"✅ Live Data"},
+  {city:"Vancouver",state:"BC",country:"Canada",centerType:"City Center",programName:"Introduction to Inner Engineering (Free)",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Jul 5, 2026",endDate:"Jul 5, 2026",venueName:"Coquitlam City Centre Library",address:"1169 Pinetree Way, Coquitlam, BC V3B 0Y1",status:"✅ Live Data"},
+  {city:"Vancouver",state:"BC",country:"Canada",centerType:"City Center",programName:"Isha Hatha Yoga for Children",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jul 24, 2026",endDate:"Jul 26, 2026",venueName:"All Labels",address:"15355 68 Ave, Surrey, BC V3S 2C1",status:"✅ Live Data"},
+  {city:"Vancouver",state:"BC",country:"Canada",centerType:"City Center",programName:"Surya Kriya",programCategory:"Beginner",programType:"Hatha Yoga",startDate:"Jul 25, 2026",endDate:"Jul 26, 2026",venueName:"All Labels",address:"15355 68 Ave, Surrey, BC V3S 2C1",status:"✅ Live Data"},
+  {city:"Vancouver",state:"BC",country:"Canada",centerType:"City Center",programName:"Introduction to Inner Engineering (Free)",programCategory:"Beginner",programType:"Free Event/Intro",startDate:"Oct 22, 2026",endDate:"Oct 22, 2026",venueName:"Peretz Centre",address:"6184 Ash St, Vancouver, BC V5Z 3G9",status:"✅ Live Data"},
+  {city:"Vancouver",state:"BC",country:"Canada",centerType:"City Center",programName:"Inner Engineering In-Person",programCategory:"Beginner",programType:"Inner Engineering In-Person",startDate:"Oct 22, 2026",endDate:"Oct 25, 2026",venueName:"Peretz Centre",address:"6184 Ash St, Vancouver, BC V5Z 3G9",status:"✅ Live Data"},
+  {city:"Montreal",state:"QC",country:"Canada",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Calgary",state:"AB",country:"Canada",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Edmonton",state:"AB",country:"Canada",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Ottawa",state:"ON",country:"Canada",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+  {city:"Regina",state:"SK",country:"Canada",centerType:"City Center",programName:"No programs currently scheduled",programCategory:"—",programType:"—",startDate:"—",endDate:"—",venueName:"—",address:"—",status:"⬜ No programs currently scheduled"},
+];
+
+// ══════════════════════════════════════════════════════
+// SIMULATOR CHANNELS
+// ══════════════════════════════════════════════════════
+const CHANNELS = [
+  { id:"digital", name:"Digital / App-Led Online IE", color:"#2563eb", icon:"ti-device-mobile",
+    sliders:[
+      {id:"dig_reach", label:"Monthly digital reach (M)", min:1, max:50, step:1, val:10, unit:"M"},
+      {id:"dig_conv",  label:"Reach → free tool trial %", min:0.5, max:8, step:0.5, val:2, unit:"%"},
+      {id:"dig_ie",    label:"Trial → IE enrollment %", min:5, max:40, step:1, val:15, unit:"%"},
+      {id:"dig_comp",  label:"Enrolled → completion %", min:50, max:95, step:5, val:70, unit:"%"},
+    ]
+  },
+  { id:"cities", name:"Local City Center Network", color:"#16a34a", icon:"ti-map-pin",
+    sliders:[
+      {id:"cit_active", label:"Active cities (of 60)", min:1, max:60, step:1, val:13, unit:""},
+      {id:"cit_cohorts",label:"IE cohorts/city/year", min:1, max:24, step:1, val:4, unit:""},
+      {id:"cit_size",   label:"Avg cohort size", min:10, max:100, step:5, val:30, unit:"ppl"},
+      {id:"cit_comp",   label:"Completion rate %", min:50, max:95, step:5, val:75, unit:"%"},
+    ]
+  },
+  { id:"paid", name:"Paid Digital / Media", color:"#0891b2", icon:"ti-ad",
+    sliders:[
+      {id:"pd_spend",  label:"Monthly ad budget ($K)", min:10, max:500, step:10, val:50, unit:"$K"},
+      {id:"pd_cpa",    label:"Cost per enrollment ($)", min:30, max:300, step:10, val:80, unit:"$"},
+      {id:"pd_comp",   label:"Completion rate %", min:40, max:85, step:5, val:65, unit:"%"},
+    ]
+  },
+  { id:"ambassadors", name:"Ambassadors & Ecosystem Referrals", color:"#7c3aed", icon:"ti-users",
+    sliders:[
+      {id:"amb_alumni",  label:"Active alumni ambassadors", min:100, max:50000, step:100, val:5000, unit:""},
+      {id:"amb_ref",     label:"Referrals per ambassador/yr", min:0.5, max:5, step:0.5, val:1, unit:""},
+      {id:"amb_conv",    label:"Referral → IE completion %", min:20, max:70, step:5, val:45, unit:"%"},
+    ]
+  },
+  { id:"corporate", name:"Corporate / Medical / Educational", color:"#b45309", icon:"ti-building",
+    sliders:[
+      {id:"corp_partners",label:"B2B partnerships", min:1, max:200, step:1, val:20, unit:""},
+      {id:"corp_size",    label:"Avg employees enrolled/partner", min:10, max:500, step:10, val:50, unit:""},
+      {id:"corp_comp",    label:"Completion rate %", min:40, max:85, step:5, val:60, unit:"%"},
+    ]
+  },
+  { id:"influencer", name:"Influencer Network", color:"#c026d3", icon:"ti-star",
+    sliders:[
+      {id:"inf_reach",  label:"Total influencer reach (M)", min:0.5, max:100, step:0.5, val:5, unit:"M"},
+      {id:"inf_conv",   label:"Reach → IE enrollment %", min:0.1, max:3, step:0.1, val:0.5, unit:"%"},
+      {id:"inf_comp",   label:"Completion rate %", min:40, max:80, step:5, val:60, unit:"%"},
+    ]
+  },
+  { id:"events", name:"Events, Partnerships & Books", color:"#dc2626", icon:"ti-calendar-event",
+    sliders:[
+      {id:"evt_attend",  label:"Annual event attendees (K)", min:10, max:500, step:10, val:50, unit:"K"},
+      {id:"evt_conv",    label:"Attendee → IE conversion %", min:2, max:25, step:1, val:8, unit:"%"},
+      {id:"evt_comp",    label:"Completion rate %", min:50, max:90, step:5, val:70, unit:"%"},
+    ]
+  },
+  { id:"special", name:"Special Groups (Veterans/Students/Seniors)", color:"#0f766e", icon:"ti-heart",
+    sliders:[
+      {id:"sp_reach",   label:"Annual eligible reached (K)", min:1, max:200, step:1, val:20, unit:"K"},
+      {id:"sp_conv",    label:"Reach → enrollment %", min:5, max:40, step:5, val:15, unit:"%"},
+      {id:"sp_comp",    label:"Completion rate %", min:55, max:95, step:5, val:75, unit:"%"},
+    ]
+  },
+];
+
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
+let sortKey = 'city', sortDir = 1;
+let cityFilter = 'all';
+let simChart = null;
+
+// ══════════════════════════════════════════════════════
+// PANEL NAVIGATION
+// ══════════════════════════════════════════════════════
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    if(t.getAttribute('onclick').includes("'"+id+"'")) t.classList.add('active');
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// COMPUTED STATS
+// ══════════════════════════════════════════════════════
+function computeStats() {
+  const live = PROGRAMS.filter(p => p.status === '✅ Live Data');
+  const cities = [...new Set(PROGRAMS.map(p=>p.city))];
+  const activeCities = [...new Set(live.map(p=>p.city))];
+  const zeroCities = cities.filter(c => !activeCities.includes(c));
+  const ie = live.filter(p=>p.programType==='Inner Engineering In-Person');
+  const hy = live.filter(p=>p.programType==='Hatha Yoga');
+  const fr = live.filter(p=>p.programType==='Free Event/Intro');
+  return { live, cities, activeCities, zeroCities, ie, hy, fr, total: live.length };
+}
+
+// ══════════════════════════════════════════════════════
+// OVERVIEW PANEL
+// ══════════════════════════════════════════════════════
+function buildOverview() {
+  const s = computeStats();
+  document.getElementById('h-total-programs').textContent = s.total;
+  document.getElementById('h-active-cities').textContent = s.activeCities.length;
+  document.getElementById('h-dormant').textContent = s.zeroCities.length;
+  document.getElementById('prog-badge').textContent = PROGRAMS.length;
+
+  document.getElementById('ov-ie').textContent = s.ie.length;
+  document.getElementById('ov-ie-cities').textContent = [...new Set(s.ie.map(p=>p.city))].length;
+  document.getElementById('ov-ie-gap').textContent = `${s.zeroCities.length} cities have none`;
+  document.getElementById('ov-hy').textContent = s.hy.length;
+  document.getElementById('ov-hy-cities').textContent = [...new Set(s.hy.map(p=>p.city))].length;
+  document.getElementById('ov-free').textContent = s.fr.length;
+  document.getElementById('ov-free-cities').textContent = [...new Set(s.fr.map(p=>p.city))].length;
+  document.getElementById('ov-zero').textContent = s.zeroCities.length;
+  document.getElementById('ov-zero-pct').textContent = Math.round(s.zeroCities.length / s.cities.length * 100) + '% of all cities';
+
+  const activePct = Math.round(s.activeCities.length / s.cities.length * 100);
+  const ieCities = [...new Set(s.ie.map(p=>p.city))].length;
+  const iePct = Math.round(ieCities / s.cities.length * 100);
+  const hyCities = [...new Set(s.hy.map(p=>p.city))].length;
+  const hyPct = Math.round(hyCities / s.cities.length * 100);
+  document.getElementById('active-pct').textContent = activePct+'%';
+  document.getElementById('ie-pct').textContent = iePct+'%';
+  document.getElementById('hy-pct').textContent = hyPct+'%';
+  document.getElementById('active-bar').style.width = activePct+'%';
+  document.getElementById('ie-bar').style.width = iePct+'%';
+  document.getElementById('hy-bar').style.width = hyPct+'%';
+
+  // Type chart
+  const tc = document.getElementById('chart-type');
+  const typeData = [s.ie.length, s.hy.length, s.fr.length,
+    s.live.filter(p=>p.programType==='Advanced').length];
+  const typeLabels = ['IE In-Person','Hatha Yoga','Free Events','Advanced'];
+  const typeColors = ['#2563eb','#16a34a','#d97706','#9333ea'];
+  new Chart(tc, {
+    type:'doughnut',
+    data:{ labels:typeLabels, datasets:[{ data:typeData, backgroundColor:typeColors, borderWidth:2, borderColor:'#fff' }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} } }
+  });
+  const leg = document.getElementById('chart-type-legend');
+  typeLabels.forEach((l,i) => {
+    const s2 = document.createElement('span');
+    s2.style.cssText='display:flex;align-items:center;gap:4px;';
+    s2.innerHTML=`<span style="width:10px;height:10px;border-radius:2px;background:${typeColors[i]};display:inline-block;"></span>${l} (${typeData[i]})`;
+    leg.appendChild(s2);
+  });
+
+  // City chart
+  const cityCount = {};
+  s.live.forEach(p => { cityCount[p.city] = (cityCount[p.city]||0)+1; });
+  const sorted = Object.entries(cityCount).sort((a,b)=>b[1]-a[1]).slice(0,12);
+  new Chart(document.getElementById('chart-city'), {
+    type:'bar',
+    data:{ labels:sorted.map(x=>x[0].replace(' / New England','').replace(' / New England','')), datasets:[{ label:'Programs', data:sorted.map(x=>x[1]), backgroundColor:'#1F2937', borderRadius:3 }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{ticks:{font:{size:10},maxRotation:40}}, y:{beginAtZero:true,ticks:{stepSize:2}} } }
+  });
+
+  // Monthly chart
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const monthly = Array(12).fill(0);
+  s.live.forEach(p => {
+    months.forEach((m,i) => { if(p.startDate && p.startDate.includes(m)) monthly[i]++; });
+    if(p.startDate==='Year-round'||p.startDate==='Daily'||p.startDate==='Periodic') {
+      for(let i=0;i<12;i++) monthly[i]+=0.5;
+    }
+  });
+  new Chart(document.getElementById('chart-monthly'), {
+    type:'bar',
+    data:{ labels:months, datasets:[{ label:'Programs', data:monthly.map(v=>Math.round(v)), backgroundColor:months.map((_,i)=>i>=5&&i<=8?'#C9A24B':'#1F2937'), borderRadius:3 }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{ticks:{font:{size:11}}}, y:{beginAtZero:true} } }
+  });
+
+  // Country chart
+  const usa = s.live.filter(p=>p.country==='USA').length;
+  const can = s.live.filter(p=>p.country==='Canada').length;
+  new Chart(document.getElementById('chart-country'), {
+    type:'bar',
+    data:{ labels:['USA','Canada'], datasets:[{ data:[usa,can], backgroundColor:['#2563eb','#dc2626'], borderRadius:4 }] },
+    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}}, scales:{ x:{beginAtZero:true}, y:{ticks:{font:{size:13}}} } }
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// PROGRAMS TABLE
+// ══════════════════════════════════════════════════════
+function sortTable(key) {
+  if(sortKey===key) sortDir*=-1; else { sortKey=key; sortDir=1; }
+  renderTable();
+}
+
+function resetFilters() {
+  document.getElementById('search-input').value='';
+  document.getElementById('filter-type').value='';
+  document.getElementById('filter-country').value='';
+  document.getElementById('filter-status').value='';
+  renderTable();
+}
+
+function typeTag(t) {
+  const map = {'Inner Engineering In-Person':'tag-ie','Hatha Yoga':'tag-hy','Free Event/Intro':'tag-free','Advanced':'tag-adv','Flagship Campus':'tag-camp'};
+  return `<span class="tag ${map[t]||'tag-none'}">${t}</span>`;
+}
+
+function renderTable() {
+  const q = (document.getElementById('search-input').value||'').toLowerCase();
+  const ft = document.getElementById('filter-type').value;
+  const fc = document.getElementById('filter-country').value;
+  const fs = document.getElementById('filter-status').value;
+
+  let data = PROGRAMS.filter(p => {
+    const search = (p.city+p.programName+p.venueName+p.address).toLowerCase();
+    if(q && !search.includes(q)) return false;
+    if(ft && p.programType!==ft) return false;
+    if(fc && p.country!==fc) return false;
+    if(fs && p.status!==fs) return false;
+    return true;
+  });
+
+  data.sort((a,b) => {
+    const av=a[sortKey]||'', bv=b[sortKey]||'';
+    return av.localeCompare(bv)*sortDir;
+  });
+
+  const tbody = document.getElementById('program-tbody');
+  tbody.innerHTML = data.map((p,i) => `
+    <tr>
+      <td><b>${p.city}</b></td>
+      <td>${p.state}</td>
+      <td>${p.country}</td>
+      <td>${p.centerType==='Flagship Campus'?'<span class="tag tag-camp">Flagship</span>':'<span class="tag tag-none">City</span>'}</td>
+      <td>${p.programName}</td>
+      <td>${typeTag(p.programType)}</td>
+      <td style="white-space:nowrap">${p.startDate}</td>
+      <td style="white-space:nowrap">${p.endDate}</td>
+      <td>${p.venueName}</td>
+      <td style="font-size:11.5px;color:var(--text3)">${p.address}</td>
+    </tr>
+  `).join('');
+
+  document.getElementById('prog-count').textContent = `${data.length} of ${PROGRAMS.length} rows`;
+  document.getElementById('prog-badge').textContent = data.length;
+}
+
+// ══════════════════════════════════════════════════════
+// CITIES PANEL
+// ══════════════════════════════════════════════════════
+function buildCities() {
+  const s = computeStats();
+  const cityMap = {};
+  PROGRAMS.forEach(p => {
+    if(!cityMap[p.city]) cityMap[p.city]={city:p.city,state:p.state,country:p.country,ie:0,hy:0,free:0,adv:0,programs:[],hasData:false};
+    if(p.status==='✅ Live Data') {
+      cityMap[p.city].hasData=true;
+      if(p.programType==='Inner Engineering In-Person') cityMap[p.city].ie++;
+      else if(p.programType==='Hatha Yoga') cityMap[p.city].hy++;
+      else if(p.programType==='Free Event/Intro') cityMap[p.city].free++;
+      else if(p.programType==='Advanced') cityMap[p.city].adv++;
+      cityMap[p.city].programs.push(p);
+    } else {
+      cityMap[p.city].programs.push(p);
+    }
+  });
+
+  window._cityMap = cityMap;
+  renderCities(cityMap);
+}
+
+function filterCities(f) {
+  cityFilter = f;
+  renderCities(window._cityMap);
+}
+
+function renderCities(cityMap) {
+  const grid = document.getElementById('city-grid');
+  let cities = Object.values(cityMap);
+  if(cityFilter==='active') cities = cities.filter(c=>c.hasData);
+  if(cityFilter==='zero') cities = cities.filter(c=>!c.hasData);
+  if(cityFilter==='canada') cities = cities.filter(c=>c.country==='Canada');
+  cities.sort((a,b)=>a.city.localeCompare(b.city));
+
+  grid.innerHTML = cities.map(c => {
+    const dots = [];
+    if(c.ie>0) dots.push(`<span class="city-dot dot-ie" title="IE In-Person"></span>`);
+    if(c.hy>0) dots.push(`<span class="city-dot dot-hy" title="Hatha Yoga"></span>`);
+    if(c.free>0) dots.push(`<span class="city-dot dot-free" title="Free Event"></span>`);
+    const total = c.ie+c.hy+c.free+c.adv;
+    return `<div class="city-card ${!c.hasData?'city-zero':''}" onclick="showCityDetail('${c.city}')">
+      <div class="city-name">${c.city}</div>
+      <div class="city-state">${c.state} · ${c.country}</div>
+      <div class="city-programs">${dots.join('')}</div>
+      <div class="city-count">${total>0?total+' program'+(total>1?'s':''):'No programs scheduled'}</div>
+    </div>`;
+  }).join('');
+}
+
+function showCityDetail(city) {
+  const m = window._cityMap[city];
+  document.querySelectorAll('.city-card').forEach(c => c.classList.remove('active-city'));
+  document.querySelectorAll('.city-card').forEach(c => { if(c.querySelector('.city-name').textContent===city) c.classList.add('active-city'); });
+  const d = document.getElementById('city-detail');
+  d.style.display='block';
+  document.getElementById('cd-title').textContent = city + ' · ' + m.state + ' · ' + m.country;
+  const tbody = document.getElementById('cd-body');
+  tbody.innerHTML = m.programs.map(p => `
+    <tr>
+      <td style="padding:6px 10px;">${p.programName}</td>
+      <td style="padding:6px 10px;white-space:nowrap;">${p.startDate}${p.endDate&&p.endDate!==p.startDate?'<br>→ '+p.endDate:''}</td>
+      <td style="padding:6px 10px;">${p.venueName}</td>
+      <td style="padding:6px 10px;">${typeTag(p.programType)}</td>
+    </tr>
+  `).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// SIMULATOR
+// ══════════════════════════════════════════════════════
+function buildSimulator() {
+  const grid = document.getElementById('channels-grid');
+  grid.innerHTML = CHANNELS.map(ch => {
+    const sliderHtml = ch.sliders.map(s => `
+      <div class="slider-row">
+        <span>${s.label}</span>
+        <input type="range" id="s_${s.id}" min="${s.min}" max="${s.max}" step="${s.step}" value="${s.val}"
+          oninput="document.getElementById('v_${s.id}').textContent=this.value+'${s.unit}';updateSim()">
+        <span class="slider-val" id="v_${s.id}">${s.val}${s.unit}</span>
+      </div>`).join('');
+    return `<div class="channel-row">
+      <div class="channel-top">
+        <div class="channel-name"><i class="ti ${ch.icon}" style="font-size:14px;margin-right:5px;color:${ch.color};"></i>${ch.name}</div>
+        <div class="channel-num" id="cn_${ch.id}">0 <small>completions</small></div>
+      </div>
+      <div class="channel-sliders">${sliderHtml}</div>
+    </div>`;
+  }).join('');
+  updateSim();
+}
+
+function calcChannel(ch) {
+  const g = id => parseFloat(document.getElementById('s_'+id)?.value||0);
+  switch(ch.id) {
+    case 'digital': {
+      const reach = g('dig_reach')*1000000;
+      const trial = reach*(g('dig_conv')/100);
+      const enrolled = trial*(g('dig_ie')/100);
+      return Math.round(enrolled*(g('dig_comp')/100));
+    }
+    case 'cities': {
+      return Math.round(g('cit_active')*g('cit_cohorts')*g('cit_size')*(g('cit_comp')/100));
+    }
+    case 'paid': {
+      const monthly = (g('pd_spend')*1000)/g('pd_cpa');
+      return Math.round(monthly*12*(g('pd_comp')/100));
+    }
+    case 'ambassadors': {
+      return Math.round(g('amb_alumni')*g('amb_ref')*(g('amb_conv')/100));
+    }
+    case 'corporate': {
+      return Math.round(g('corp_partners')*g('corp_size')*(g('corp_comp')/100));
+    }
+    case 'influencer': {
+      return Math.round(g('inf_reach')*1000000*(g('inf_conv')/100)*(g('inf_comp')/100));
+    }
+    case 'events': {
+      return Math.round(g('evt_attend')*1000*(g('evt_conv')/100)*(g('evt_comp')/100));
+    }
+    case 'special': {
+      return Math.round(g('sp_reach')*1000*(g('sp_conv')/100)*(g('sp_comp')/100));
+    }
+    default: return 0;
+  }
+}
+
+function updateSim() {
+  const target = parseInt(document.getElementById('target-slider').value);
+  document.getElementById('target-val').textContent = target.toLocaleString();
+
+  const vals = CHANNELS.map(ch => { const v=calcChannel(ch); return {ch,v}; });
+  const total = vals.reduce((s,x)=>s+x.v,0);
+  const pct = Math.min(100,Math.round(total/target*100));
+  const gap = Math.max(0,target-total);
+  const active = vals.filter(x=>x.v>0).length;
+
+  vals.forEach(({ch,v}) => {
+    const el = document.getElementById('cn_'+ch.id);
+    if(el) el.innerHTML = v.toLocaleString()+' <small>completions</small>';
+  });
+
+  document.getElementById('sr-total').textContent = total.toLocaleString();
+  document.getElementById('sr-pct').textContent = pct+'%';
+  document.getElementById('sr-gap').textContent = gap.toLocaleString();
+  document.getElementById('sr-channels').textContent = active;
+  document.getElementById('prog-to-target').textContent = `${total.toLocaleString()} / ${target.toLocaleString()}`;
+  document.getElementById('main-progress').style.width = pct+'%';
+  document.getElementById('main-progress').style.background = pct>=100?'#16a34a':pct>=70?'#C9A24B':'#2563eb';
+
+  const bars = document.getElementById('channel-bars');
+  const maxV = Math.max(...vals.map(x=>x.v),1);
+  bars.innerHTML = vals.map(({ch,v}) => `
+    <div class="ch-bar-row">
+      <span class="ch-bar-label"><i class="ti ${ch.icon}" style="color:${ch.color};font-size:12px;margin-right:4px;"></i>${ch.name}</span>
+      <div class="ch-bar-track">
+        <div class="ch-bar-fill" style="width:${Math.round(v/maxV*100)}%;background:${ch.color};"></div>
+      </div>
+      <span class="ch-bar-val">${v.toLocaleString()}</span>
+    </div>`).join('');
+
+  updateSimChart(vals, total, target);
+}
+
+function updateSimChart(vals, total, target) {
+  const labels = vals.map(x => x.ch.name.replace('Digital / App-Led Online IE','Online IE').replace('Local City Center Network','City Centers').replace('Paid Digital / Media','Paid Media').replace('Ambassadors & Ecosystem Referrals','Ambassadors').replace('Corporate / Medical / Educational','Corporate').replace('Influencer Network','Influencers').replace('Events, Partnerships & Books','Events').replace('Special Groups (Veterans/Students/Seniors)','Special Groups'));
+  const data = vals.map(x=>x.v);
+  const colors = vals.map(x=>x.ch.color);
+
+  if(simChart) { simChart.destroy(); }
+  simChart = new Chart(document.getElementById('sim-chart'), {
+    type:'bar',
+    data:{ labels, datasets:[{ label:'IE Completions', data, backgroundColor:colors, borderRadius:4 }] },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        annotation:{}
+      },
+      scales:{
+        x:{ticks:{font:{size:10},maxRotation:30}},
+        y:{beginAtZero:true,ticks:{callback:v=>v>=1000?Math.round(v/1000)+'K':v}}
+      }
+    }
+  });
+}
+
+function resetSim() {
+  CHANNELS.forEach(ch => {
+    ch.sliders.forEach(s => {
+      const el = document.getElementById('s_'+s.id);
+      const vel = document.getElementById('v_'+s.id);
+      if(el) el.value = s.val;
+      if(vel) vel.textContent = s.val+s.unit;
+    });
+  });
+  document.getElementById('target-slider').value=500000;
+  updateSim();
+}
+
+function setSlider(id, val) {
+  const el = document.getElementById('s_'+id);
+  if(!el) return;
+  el.value = val;
+  const s = CHANNELS.flatMap(c=>c.sliders).find(s=>s.id===id);
+  const vel = document.getElementById('v_'+id);
+  if(vel&&s) vel.textContent = val+s.unit;
+}
+
+function loadScenario(name) {
+  const presets = {
+    conservative: { dig_reach:20, dig_conv:2, dig_ie:12, dig_comp:70, cit_active:13, cit_cohorts:4, cit_size:30, cit_comp:75, pd_spend:50, pd_cpa:80, pd_comp:65, amb_alumni:5000, amb_ref:1, amb_conv:40, corp_partners:20, corp_size:50, corp_comp:60, inf_reach:5, inf_conv:0.3, inf_comp:55, evt_attend:50, evt_conv:6, evt_comp:65, sp_reach:20, sp_conv:12, sp_comp:70 },
+    balanced: { dig_reach:30, dig_conv:3, dig_ie:15, dig_comp:72, cit_active:30, cit_cohorts:8, cit_size:40, cit_comp:78, pd_spend:150, pd_cpa:65, pd_comp:68, amb_alumni:15000, amb_ref:1.5, amb_conv:45, corp_partners:60, corp_size:80, corp_comp:65, inf_reach:20, inf_conv:0.5, inf_comp:60, evt_attend:120, evt_conv:8, evt_comp:70, sp_reach:60, sp_conv:18, sp_comp:75 },
+    aggressive: { dig_reach:50, dig_conv:5, dig_ie:20, dig_comp:75, cit_active:55, cit_cohorts:18, cit_size:60, cit_comp:80, pd_spend:400, pd_cpa:50, pd_comp:72, amb_alumni:40000, amb_ref:2.5, amb_conv:50, corp_partners:150, corp_size:120, corp_comp:70, inf_reach:80, inf_conv:1, inf_comp:65, evt_attend:350, evt_conv:15, evt_comp:75, sp_reach:150, sp_conv:25, sp_comp:80 },
+    cities: { dig_reach:10, dig_conv:1.5, dig_ie:10, dig_comp:68, cit_active:55, cit_cohorts:20, cit_size:55, cit_comp:82, pd_spend:80, pd_cpa:90, pd_comp:65, amb_alumni:20000, amb_ref:2, amb_conv:48, corp_partners:40, corp_size:60, corp_comp:65, inf_reach:10, inf_conv:0.4, inf_comp:58, evt_attend:80, evt_conv:10, evt_comp:72, sp_reach:40, sp_conv:20, sp_comp:76 },
+    corporate: { dig_reach:15, dig_conv:2, dig_ie:12, dig_comp:70, cit_active:20, cit_cohorts:6, cit_size:35, cit_comp:76, pd_spend:200, pd_cpa:70, pd_comp:68, amb_alumni:8000, amb_ref:1, amb_conv:42, corp_partners:180, corp_size:150, corp_comp:72, inf_reach:15, inf_conv:0.4, inf_comp:60, evt_attend:100, evt_conv:8, evt_comp:70, sp_reach:30, sp_conv:15, sp_comp:74 },
+  };
+  const p = presets[name];
+  if(!p) return;
+  Object.entries(p).forEach(([id,val]) => setSlider(id, val));
+  updateSim();
+}
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  buildOverview();
+  renderTable();
+  buildCities();
+  buildSimulator();
+});
+</script>
+</body>
+</html>
