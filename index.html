@@ -157,21 +157,120 @@
   .modal-trigger { position:fixed;bottom:1.25rem;right:1.25rem;background:var(--navy);color:#fff;border:none;border-radius:50px;padding:8px 16px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(0,0,0,0.2);z-index:90;transition:all 0.15s; }
   .modal-trigger:hover { background:#374151; }
 
-  @media (max-width:900px) {
-    .grid-4 { grid-template-columns: repeat(2,1fr); }
+  /* ── Mobile nav ── */
+  .nav-menu-btn { display:none; background:none; border:none; color:#fff; cursor:pointer; padding:4px 8px; }
+  .mob-tab { display:flex; align-items:center; gap:8px; width:100%; padding:11px 16px; border:none; background:none; color:rgba(255,255,255,0.75); font-size:14px; cursor:pointer; border-radius:8px; text-align:left; }
+  .mob-tab:hover, .mob-tab.active { background:rgba(255,255,255,0.12); color:#fff; }
+  .mob-tab i { font-size:17px; }
+
+  @media (max-width: 700px) {
+    /* Nav */
+    .nav { padding: 0 1rem; }
+    .nav-brand-text { font-size: 13px; }
+    #nav-tabs-desktop { display: none; }
+    .nav-menu-btn { display: flex; align-items: center; }
+
+    /* Panels */
+    .panel { padding: 0.75rem; }
+
+    /* Hero */
+    .hero { flex-direction: column; gap: 1rem; padding: 1.25rem; }
+    .hero h1 { font-size: 16px; }
+    .hero p  { font-size: 11px; }
+    .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; width: 100%; }
+    .hero-stat .n { font-size: 22px; }
+
+    /* IEO live band */
+    .live-band { padding: 1rem; }
+    .live-band-header { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .live-label { font-size: 10px; }
+    .live-stats { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .live-stat .n { font-size: 20px; }
+    .live-stat[style*="border-left"] { border-left: none !important; border-right: none !important; }
+
+    /* Grids */
+    .grid-4 { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .card   { padding: 1rem; }
+    .metric-n { font-size: 22px; }
+
+    /* Charts — give them enough height but not too much */
+    canvas { max-height: 220px; }
+
+    /* Sim results */
+    .sim-results { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .sim-result-card .n { font-size: 18px; }
+    .sim-body { padding: 1rem; }
+    .sim-target { flex-wrap: wrap; gap: 8px; }
+    .sim-target label { min-width: unset; font-size: 12px; }
+    .sim-target .val { min-width: unset; }
     .channels-grid { grid-template-columns: 1fr; }
-    .sim-results { grid-template-columns: repeat(2,1fr); }
-    .panel { padding: 1rem; }
-    .hero { flex-direction: column; gap: 1rem; }
-    .live-stats { grid-template-columns: repeat(3,1fr); }
+    .slider-row span { min-width: 110px; font-size: 10.5px; }
+    .ch-bar-label { min-width: 160px; font-size: 11px; }
+
+    /* Cities bubble */
+    #bubble-container { height: 380px !important; }
+
+    /* City cards */
+    .city-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+    .city-card { padding: 8px 10px; }
+    .city-name { font-size: 12px; }
+
+    /* Tables — make them scroll horizontally */
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { min-width: 560px; }
+    td, th { padding: 6px 8px; font-size: 11.5px; }
+
+    /* Table toolbar */
+    .table-toolbar { gap: 6px; }
+    .table-toolbar input, .table-toolbar select { min-width: 110px; font-size: 12px; }
+
+    /* IEO table */
+    #ieo-tbody td, #ieo-tbody th { font-size: 11px; }
+
+    /* Insights */
+    .insight { padding: 10px 12px; }
+    .insight-title { font-size: 12.5px; }
+    .insight-body  { font-size: 12px; }
+
+    /* Cities filter row */
+    #cf-all, #cf-act, #cf-zero, #cf-can { font-size: 11px !important; padding: 4px 8px !important; }
+    #view-bubble, #view-grid { padding: 4px 10px !important; font-size: 11px !important; }
+
+    /* Section headers */
+    .section-title { font-size: 14px; }
+
+    /* Modal */
+    #welcome-modal > div { margin: 0.5rem; max-height: 96vh; }
+    #welcome-modal > div > div:last-child { padding: 1.25rem; }
+    #welcome-modal h1 { font-size: 17px; }
+
+    /* About button — move above mobile keyboard area */
+    .modal-trigger { bottom: 1rem; right: 1rem; font-size: 11px; padding: 7px 12px; }
+
+    /* Progress bars label wrap */
+    .progress-label { flex-wrap: wrap; gap: 2px; }
+
+    /* Regional cards in IEO tab */
+    #panel-ieo .grid-4 { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 400px) {
+    .hero-stats { grid-template-columns: 1fr 1fr; }
+    .live-stats { grid-template-columns: 1fr 1fr; }
+    .grid-4 { grid-template-columns: 1fr; }
+    .city-grid { grid-template-columns: 1fr; }
+    .sim-results { grid-template-columns: 1fr 1fr; }
   }
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <div class="nav-brand"><div class="dot"></div>Isha North America — IE 500K Dashboard</div>
-  <div class="nav-tabs">
+  <div class="nav-brand"><div class="dot"></div><span class="nav-brand-text">Isha North America — IE 500K</span></div>
+  <!-- Desktop tabs -->
+  <div class="nav-tabs" id="nav-tabs-desktop">
     <button class="nav-tab active" onclick="showPanel('overview')"><i class="ti ti-dashboard"></i> Overview</button>
     <button class="nav-tab" onclick="showPanel('ieo')"><i class="ti ti-chart-line"></i> IEO Live Data</button>
     <button class="nav-tab" onclick="showPanel('programs')"><i class="ti ti-list"></i> Programs <span class="badge" id="prog-badge">—</span></button>
@@ -179,7 +278,21 @@
     <button class="nav-tab" onclick="showPanel('simulator')"><i class="ti ti-adjustments"></i> Simulator</button>
     <button class="nav-tab" onclick="showPanel('insights')"><i class="ti ti-bulb"></i> Insights</button>
   </div>
+  <!-- Mobile menu button -->
+  <button class="nav-menu-btn" id="nav-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+    <i class="ti ti-menu-2" style="font-size:20px;"></i>
+  </button>
 </nav>
+
+<!-- Mobile dropdown menu -->
+<div id="mobile-menu" style="display:none;position:fixed;top:56px;left:0;right:0;background:#1a2433;z-index:99;border-bottom:1px solid rgba(255,255,255,0.1);padding:8px;">
+  <button class="mob-tab active" id="mob-overview"  onclick="showPanel('overview');closeMobileMenu()"><i class="ti ti-dashboard"></i> Overview</button>
+  <button class="mob-tab"        id="mob-ieo"       onclick="showPanel('ieo');closeMobileMenu()"><i class="ti ti-chart-line"></i> IEO Live Data</button>
+  <button class="mob-tab"        id="mob-programs"  onclick="showPanel('programs');closeMobileMenu()"><i class="ti ti-list"></i> Programs</button>
+  <button class="mob-tab"        id="mob-cities"    onclick="showPanel('cities');closeMobileMenu()"><i class="ti ti-map-pin"></i> Cities In-Person</button>
+  <button class="mob-tab"        id="mob-simulator" onclick="showPanel('simulator');closeMobileMenu()"><i class="ti ti-adjustments"></i> Simulator</button>
+  <button class="mob-tab"        id="mob-insights"  onclick="showPanel('insights');closeMobileMenu()"><i class="ti ti-bulb"></i> Insights</button>
+</div>
 
 <div id="map-tooltip"></div>
 
@@ -896,10 +1009,28 @@ let simChart = null;
 function showPanel(id) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.mob-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('panel-'+id).classList.add('active');
+  // Sync desktop tabs
   document.querySelectorAll('.nav-tab').forEach(t => {
     if(t.getAttribute('onclick') && t.getAttribute('onclick').includes("'"+id+"'")) t.classList.add('active');
   });
+  // Sync mobile tabs
+  const mobBtn = document.getElementById('mob-'+id);
+  if(mobBtn) mobBtn.classList.add('active');
+  window.scrollTo(0,0);
+}
+function toggleMobileMenu() {
+  const m = document.getElementById('mobile-menu');
+  const isOpen = m.style.display !== 'none';
+  m.style.display = isOpen ? 'none' : 'block';
+  document.getElementById('nav-menu-btn').innerHTML = isOpen
+    ? '<i class="ti ti-menu-2" style="font-size:20px;"></i>'
+    : '<i class="ti ti-x" style="font-size:20px;"></i>';
+}
+function closeMobileMenu() {
+  document.getElementById('mobile-menu').style.display = 'none';
+  document.getElementById('nav-menu-btn').innerHTML = '<i class="ti ti-menu-2" style="font-size:20px;"></i>';
 }
 
 // ══ COMPUTED STATS ══
