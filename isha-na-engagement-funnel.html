@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Isha NA Engagement Funnel</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #FDFAF5;
+    padding: 48px 48px 72px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .doc-header {
+    text-align: center;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #E8E0D0;
+  }
+  .doc-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #9A7A42;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .doc-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1A1714;
+    margin-bottom: 6px;
+  }
+  .doc-sub {
+    font-size: 12px;
+    color: #8A8278;
+  }
+
+  /* Funnel wrapper */
+  .funnel { width: 100%; }
+
+  /* Layer labels */
+  .layer-lbl {
+    text-align: center;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8A8278;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  /* Generic stage */
+  .stage {
+    margin: 0 auto;
+    padding: 16px 20px 14px;
+    border-radius: 10px;
+  }
+  .stitle {
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .ssub {
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 8px;
+    line-height: 1.55;
+  }
+  .pills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .pill {
+    font-size: 11.5px;
+    padding: 4px 13px;
+    border-radius: 20px;
+    white-space: nowrap;
+    font-weight: 400;
+  }
+  .pl { background: rgba(255,255,255,0.22); color: #fff; }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 4px 12px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  /* Stage widths */
+  .s1 { max-width: 860px; background: #085041; }
+  .s3 { max-width: 740px; background: #633806; }
+  .s4 { max-width: 600px; background: #3C3489; }
+  .s5 { max-width: 460px; background: #085041; }
+
+  /* Side by side */
+  .sbs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .s-online  { background: #27500A; border-radius: 10px; }
+  .s-inperson { background: #0C447C; border-radius: 10px; }
+
+  /* Connector */
+  .conn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 3px auto;
+  }
+  .cl { width: 1px; height: 16px; }
+  .clbl { font-size: 10px; color: #888; margin: 2px 0; }
+
+  /* CTA strip */
+  .cta {
+    max-width: 860px;
+    margin: 6px auto 0;
+    background: #F5F2ED;
+    border: 0.5px solid #D9CDB8;
+    border-radius: 6px;
+    padding: 7px 14px;
+    text-align: center;
+    font-size: 11px;
+    color: #555;
+    font-style: italic;
+  }
+
+  /* Veterans note */
+  .vet {
+    max-width: 860px;
+    margin: 5px auto;
+    background: #F5F2ED;
+    border: 0.5px solid #D9CDB8;
+    border-radius: 6px;
+    padding: 5px 14px;
+    font-size: 11px;
+    color: #888;
+    text-align: center;
+  }
+
+  /* Layer divider */
+  .ldiv {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 860px;
+    margin: 10px auto;
+  }
+  .ldivl { flex: 1; height: 1px; border-top: 1px dashed #CCC; }
+  .ldivb {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: #7A6A50;
+    background: #F5F2ED;
+    border: 0.5px solid #D9CDB8;
+    border-radius: 10px;
+    padding: 3px 10px;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  /* Design note */
+  .design-note {
+    max-width: 740px;
+    margin: 6px auto;
+    background: #FFF8EE;
+    border: 0.5px solid #E8C97A;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 11.5px;
+    color: #7A5A10;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  /* Workshop cards */
+  .workshop-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin: 8px 0 6px;
+  }
+  .wcard {
+    background: rgba(255,255,255,0.13);
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+  .wname { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+  .wdesc { font-size: 11px; color: rgba(255,255,255,0.78); line-height: 1.4; }
+
+  /* IE formats */
+  .ie-formats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin: 8px 0 4px;
+  }
+
+  /* Feedback */
+  .fb {
+    font-size: 10px;
+    color: #5DCAA5;
+    text-align: center;
+    margin-top: 8px;
+    font-style: italic;
+  }
+
+  /* Legend */
+  .legend {
+    max-width: 860px;
+    margin: 18px auto 0;
+    background: #F5F2ED;
+    border: 0.5px solid #D9CDB8;
+    border-radius: 8px;
+    padding: 16px 20px;
+  }
+  .ltitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1A1714;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .lrow {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: #444;
+    line-height: 1.6;
+  }
+  .ldot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* Footer */
+  .doc-footer {
+    text-align: center;
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid #E8E0D0;
+    font-size: 9px;
+    color: #B0A898;
+    letter-spacing: 0.08em;
+  }
+
+  /* Print styles */
+  @media print {
+    body { background: #fff; padding: 20px; }
+    @page { margin: 1.5cm; size: A4; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="doc-header">
+  <div class="doc-eyebrow">Isha Foundation · North America · Internal Strategy</div>
+  <div class="doc-title">Isha NA Engagement Funnel</div>
+  <div class="doc-sub">Layer 1 Awareness &amp; Free Sessions → Layer 2 Paid Workshops → Inner Engineering → Advanced Programs</div>
+</div>
+
+<div class="funnel">
+
+  <!-- LAYER 1 label -->
+  <div class="layer-lbl">Layer 1 — Broad Awareness &amp; Free Engagement</div>
+
+  <!-- Stage 1: Awareness channels -->
+  <div class="stage s1">
+    <div class="stitle" style="color:#E1F5EE;">Awareness channels</div>
+    <div class="ssub" style="color:#9FE1CB;">Cold audience · first contact · curiosity only</div>
+    <div class="pills">
+      <span class="pill pl">Social / Reels / TikTok</span>
+      <span class="pill pl">YouTube</span>
+      <span class="pill pl">Podcasts</span>
+      <span class="pill pl">LinkedIn</span>
+      <span class="pill pl">Eventbrite / Meetup</span>
+      <span class="pill pl">Wellness fairs &amp; booths</span>
+      <span class="pill pl">Flyering</span>
+      <span class="pill pl">University campuses</span>
+      <span class="pill pl">Press / PR</span>
+      <span class="pill pl">Nextdoor / Reddit</span>
+    </div>
+  </div>
+
+  <!-- connector -->
+  <div class="conn">
+    <div class="cl" style="background:#aaa;"></div>
+    <div class="clbl">discovers Isha</div>
+    <div class="cl" style="background:#aaa;"></div>
+  </div>
+
+  <!-- Stage 2: Free sessions side by side -->
+  <div class="sbs">
+
+    <!-- Free Online -->
+    <div class="stage s-online">
+      <div style="text-align:center;margin-bottom:6px;">
+        <span class="badge">FREE · ONLINE · MAX 60 MIN</span>
+      </div>
+      <div class="stitle" style="color:#EAF3DE;">Free online sessions</div>
+      <div class="ssub" style="color:#C0DD97;">BigMarker · Zoom · YouTube Live<br>Insight Timer · Mindbody</div>
+      <div class="pills">
+        <span class="pill pl">Intro to IE</span>
+        <span class="pill pl">Isha Kriya</span>
+        <span class="pill pl">Miracle of Mind</span>
+        <span class="pill pl">Meditation for Mental Health</span>
+        <span class="pill pl">Meditation for Beginners</span>
+        <span class="pill pl">Yoga for Beginners</span>
+      </div>
+    </div>
+
+    <!-- Free In-Person -->
+    <div class="stage s-inperson">
+      <div style="text-align:center;margin-bottom:6px;">
+        <span class="badge">FREE · IN-PERSON · MAX 60 MIN</span>
+      </div>
+      <div class="stitle" style="color:#E6F1FB;">Free in-person sessions</div>
+      <div class="ssub" style="color:#85B7EB;">Isha centres · libraries · campuses<br>community halls · wellness events</div>
+      <div class="pills">
+        <span class="pill pl">Intro to IE</span>
+        <span class="pill pl">Isha Kriya</span>
+        <span class="pill pl">Miracle of Mind</span>
+        <span class="pill pl">Meditation for Mental Health</span>
+        <span class="pill pl">Meditation for Beginners</span>
+        <span class="pill pl">Yoga for Beginners</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA strip -->
+  <div class="cta">Same programs, different delivery — every session ends with one clear next step: "Our next workshop is on [date] — register here"</div>
+
+  <!-- Veterans -->
+  <div class="vet">⚑ Veterans: sponsored access — skip directly to Inner Engineering (free upon completion)</div>
+
+  <!-- Layer divider -->
+  <div class="ldiv">
+    <div class="ldivl"></div>
+    <div class="ldivb">LAYER 2 — PAID IN-PERSON WORKSHOPS</div>
+    <div class="ldivl"></div>
+  </div>
+
+  <!-- Design note -->
+  <div class="design-note">
+    ⚙&nbsp; Program design phase required — workshops combine free session content into a sequenced 2–4 hr arc.<br>
+    Naming and framing calibrated for each audience's language of resonance.
+  </div>
+
+  <!-- connector -->
+  <div class="conn">
+    <div class="cl" style="background:#BA7517;"></div>
+    <div class="clbl" style="color:#BA7517;">warm lead — ready to invest</div>
+    <div class="cl" style="background:#BA7517;"></div>
+  </div>
+
+  <!-- Stage 3: Paid workshops -->
+  <div class="stage s3">
+    <div style="text-align:center;margin-bottom:8px;">
+      <span class="badge">PAID · IN-PERSON ONLY · LOW BARRIER ENTRY</span>
+    </div>
+    <div class="stitle" style="color:#FAEEDA;">Immersive workshops</div>
+    <div class="ssub" style="color:#FAC775;">2–4 hours · sequenced practices + wisdom · city venues<br>Promoted only to warm audiences — prior free session attendees</div>
+    <div class="workshop-grid">
+      <div class="wcard">
+        <div class="wname">Mental Clarity Workshop</div>
+        <div class="wdesc">For corporate &amp; professionals — stress, focus, sustained performance</div>
+      </div>
+      <div class="wcard">
+        <div class="wname">Resilience &amp; Inner Stability</div>
+        <div class="wdesc">For general audiences — tools for anxiety, emotional balance, well-being</div>
+      </div>
+      <div class="wcard">
+        <div class="wname">Tools for a Thriving Mind</div>
+        <div class="wdesc">For university students — clarity, purpose, managing pressure</div>
+      </div>
+      <div class="wcard">
+        <div class="wname">Well-being From Within</div>
+        <div class="wdesc">For medical &amp; therapy communities — adjunct tools, measurable outcomes</div>
+      </div>
+    </div>
+    <div class="ssub" style="color:#FAC775;margin-bottom:0;">Promoted via: email list · session attendees · LinkedIn · city coordinators · alumni referrals</div>
+  </div>
+
+  <!-- connector -->
+  <div class="conn">
+    <div class="cl" style="background:#534AB7;"></div>
+    <div class="clbl" style="color:#534AB7;">ready for Inner Engineering</div>
+    <div class="cl" style="background:#534AB7;"></div>
+  </div>
+
+  <!-- Stage 4: Inner Engineering -->
+  <div class="stage s4">
+    <div class="stitle" style="color:#EEEDFE;">Inner Engineering</div>
+    <div class="ssub" style="color:#AFA9EC;">7 sessions · Shambhavi Mahamudra Kriya initiation</div>
+    <div class="ie-formats">
+      <span class="pill" style="background:#534AB7;color:#fff;">Online — 7 sessions (IEO)</span>
+      <span class="pill" style="background:#534AB7;color:#fff;">In-person city events</span>
+      <span class="pill" style="background:#534AB7;color:#fff;">Residential retreat at IIII</span>
+    </div>
+    <div class="ssub" style="color:#AFA9EC;margin-bottom:2px;">Tennessee · LA · city centres across North America</div>
+    <div class="ssub" style="color:#7F77DD;margin-bottom:0;">Target: 40–60% conversion from workshop attendees</div>
+  </div>
+
+  <!-- connector -->
+  <div class="conn">
+    <div class="cl" style="background:#0F6E56;"></div>
+    <div class="clbl" style="color:#0F6E56;">Isha meditator</div>
+    <div class="cl" style="background:#0F6E56;"></div>
+  </div>
+
+  <!-- Stage 5: Advanced Programs -->
+  <div class="stage s5">
+    <div class="stitle" style="color:#E1F5EE;">Advanced programs</div>
+    <div class="ssub" style="color:#9FE1CB;">Isha meditator community · deeper practice</div>
+    <div class="pills">
+      <span class="pill pl">Bhava Spandana (BSP)</span>
+      <span class="pill pl">Shoonya</span>
+      <span class="pill pl">Samyama</span>
+      <span class="pill pl">Sadhanapada</span>
+    </div>
+    <div class="ssub" style="color:#9FE1CB;margin-bottom:0;">Guru Purnima · Mahashivratri · annual events</div>
+  </div>
+
+  <!-- Feedback note -->
+  <div class="fb">↺ Isha meditators refer friends and family back into the awareness layer — the most trusted acquisition channel</div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="ltitle">Key principles</div>
+    <div class="lrow"><div class="ldot" style="background:#27500A;"></div>Free online sessions: zero friction, broad reach — same programs as in-person, delivered digitally; sessions become evergreen recordings</div>
+    <div class="lrow"><div class="ldot" style="background:#0C447C;"></div>Free in-person sessions: community trust, local presence — same programs, higher effort, always end with one visible next step</div>
+    <div class="lrow"><div class="ldot" style="background:#633806;"></div>Paid workshops: in-person only, 2–4 hrs, audience-specific naming — require a program design phase before launch</div>
+    <div class="lrow"><div class="ldot" style="background:#3C3489;"></div>Inner Engineering: never the first ask — offered only after workshop experience builds genuine readiness</div>
+    <div class="lrow"><div class="ldot" style="background:#085041;"></div>Advanced programs: for committed Isha meditators — alumni referrals organically feed back into the top of funnel</div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="doc-footer">
+  Isha Foundation · North America · Isha NA Engagement Funnel · Internal Strategy Document · 2026
+</div>
+
+</body>
+</html>
